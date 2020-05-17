@@ -131,4 +131,8 @@ public class World implements Serializable {
         return elapsedTime;
     }
 
+    public List<Generator> getGenerators() {
+        return generators;
+    }
+
 }

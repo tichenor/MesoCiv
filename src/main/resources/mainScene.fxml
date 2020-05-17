@@ -27,17 +27,17 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Button fx:id="t1Button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="88.0" text="Tier 1" textAlignment="CENTER" wrapText="true" />
-                        <Button fx:id="t2Button" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Tier 2" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="1" />
-                        <Button fx:id="t3Button" layoutX="10.0" layoutY="92.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Tier 3" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="2" />
-                        <Button fx:id="t4Button" layoutX="10.0" layoutY="174.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Tier 4" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="3" />
-                        <Button fx:id="t5Button" layoutX="10.0" layoutY="256.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Tier 5" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="4" />
-                        <Button fx:id="t6Button" layoutX="10.0" layoutY="338.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Tier 6" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="5" />
-                        <Button fx:id="t7Button" layoutX="10.0" layoutY="420.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Tier 7" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="6" />
-                        <Button fx:id="t8Button" layoutX="10.0" layoutY="502.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Tier 8" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="7" />
-                        <Button fx:id="t9Button" layoutX="10.0" layoutY="584.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Tier 9" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="8" />
-                        <Button fx:id="t10Button" layoutX="10.0" layoutY="666.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Tier 10" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="9" />
-                        <Button fx:id="t11Button" layoutX="10.0" layoutY="748.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Tier 11" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="10" />
+                        <Button fx:id="t1Button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTierButtonAction" prefWidth="88.0" text="Tier 1" textAlignment="CENTER" wrapText="true" />
+                        <Button fx:id="t2Button" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTierButtonAction" text="Tier 2" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="1" />
+                        <Button fx:id="t3Button" layoutX="10.0" layoutY="92.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTierButtonAction" text="Tier 3" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="2" />
+                        <Button fx:id="t4Button" layoutX="10.0" layoutY="174.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTierButtonAction" text="Tier 4" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="3" />
+                        <Button fx:id="t5Button" layoutX="10.0" layoutY="256.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTierButtonAction" text="Tier 5" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="4" />
+                        <Button fx:id="t6Button" layoutX="10.0" layoutY="338.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTierButtonAction" text="Tier 6" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="5" />
+                        <Button fx:id="t7Button" layoutX="10.0" layoutY="420.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTierButtonAction" text="Tier 7" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="6" />
+                        <Button fx:id="t8Button" layoutX="10.0" layoutY="502.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTierButtonAction" text="Tier 8" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="7" />
+                        <Button fx:id="t9Button" layoutX="10.0" layoutY="584.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTierButtonAction" text="Tier 9" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="8" />
+                        <Button fx:id="t10Button" layoutX="10.0" layoutY="666.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTierButtonAction" text="Tier 10" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="9" />
+                        <Button fx:id="t11Button" layoutX="10.0" layoutY="748.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleTierButtonAction" text="Tier 11" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="10" />
                         <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -378,6 +378,7 @@
                     </rowConstraints>
                     <children>
                         <Label fx:id="coinsLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" />
+                  <Label fx:id="perSecondLabel" text="Label" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>
             </top>

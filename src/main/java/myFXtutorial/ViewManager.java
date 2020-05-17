@@ -13,7 +13,7 @@ public class ViewManager {
 
     public static final int SCENE_WIDTH = 1920, SCENE_HEIGHT = 1080;
     public static final String WINDOW_TITLE = "MesoCiv";
-    public static final String FXML_PATH = "/sample.fxml";
+    public static final String FXML_PATH = "/mainScene.fxml";
     public static final String CSS_PATH = "/app.css";
 
     private Stage primaryStage;
@@ -26,7 +26,7 @@ public class ViewManager {
     public ViewManager() {
     }
 
-    public void initialize(Stage stage, GameManager gameManager) throws IOException {
+    public void initialize(Stage stage) throws IOException {
         primaryStage = stage;
         primaryStage.setTitle(WINDOW_TITLE);
 
@@ -41,7 +41,6 @@ public class ViewManager {
 
         // Fetch the controller and pass it an instance of the game manager.
         controller = loader.getController();
-        controller.setGameManager(gameManager);
 
         // Create the primary scene (content of primary stage) from the fxml file.
         primaryScene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
@@ -55,9 +54,13 @@ public class ViewManager {
     public void update(double seconds) {
         internalTimer += seconds;
         while (internalTimer > 1) {
-            controller.update();
+            controller.updateAll();
             internalTimer -= 1;
         }
+    }
+
+    public Controller getController() {
+        return controller;
     }
 
 }

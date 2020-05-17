@@ -2,7 +2,7 @@ package main.java.myFXtutorial.utils;
 
 import java.math.BigInteger;
 
-public class Formatter {
+public class StrFormatter {
 
     public static String formatTierLabel(BigInteger cost, int owned, BigInteger production) {
         //TODO: depends on data formats
@@ -20,7 +20,7 @@ public class Formatter {
     }
 
     public static String fProductionLabel(int prod) {
-        return prod + " coins/sec";
+        return prod + " /s";
     }
 
 }

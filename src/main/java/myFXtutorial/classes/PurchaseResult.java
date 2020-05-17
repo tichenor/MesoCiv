@@ -4,5 +4,6 @@ public enum PurchaseResult {
 
     OK,
     INSUFFICIENT,
-    MAX_LEVEL_REACHED
+    MAX_LEVEL_REACHED,
+    NOT_AVAILABLE
 }
