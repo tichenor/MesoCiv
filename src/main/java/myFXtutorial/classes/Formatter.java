@@ -164,7 +164,6 @@ public class Formatter {
     @Override
     public String toString() {
         String raw = rawString;
-
         if (cutAtHighest) {
 
             int length = raw.length();

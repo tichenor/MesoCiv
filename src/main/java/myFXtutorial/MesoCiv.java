@@ -25,6 +25,8 @@ import java.io.InputStream;
  */
 public class MesoCiv {
 
+    public static final boolean DEV_MODE = true; // For debugging, testing, and so on.
+
     private GameManager gameManager;
     private ViewManager viewManager;
 
@@ -50,6 +52,7 @@ public class MesoCiv {
         gameManager.initialize();
         viewManager.initialize(stage);
         viewManager.getController().setGameManager(gameManager);
+        viewManager.getController().postInitialize();
     }
 
     private void buildAndSetGameLoop() {

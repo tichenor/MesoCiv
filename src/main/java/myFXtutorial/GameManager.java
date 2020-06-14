@@ -35,11 +35,80 @@ public class GameManager {
 
         // Generators must be created in order so that indicies of world.getGenerators() is in the correct order
         g1 = new Generator.Builder(world)
-                .baseCost(100)
-                .baseValue(5)
-                .costMultiplier(1.28)
+                .baseCost(Constants.T1_BASE_COST)
+                .baseValue(Constants.T1_BASE_PROD)
+                .costMultiplier(Constants.STD_COST_MULT)
                 .generate(coins)
-                .valueMultiplier(1.23)
+                .build();
+
+        g2 = new Generator.Builder(world)
+                .baseCost(Constants.T2_BASE_COST)
+                .baseValue(Constants.T2_BASE_PROD)
+                .costMultiplier(Constants.STD_COST_MULT)
+                .generate(coins)
+                .build();
+
+        g3 = new Generator.Builder(world)
+                .baseCost(Constants.T3_BASE_COST)
+                .baseValue(Constants.T3_BASE_PROD)
+                .costMultiplier(Constants.STD_COST_MULT)
+                .generate(coins)
+                .build();
+
+        g4 = new Generator.Builder(world)
+                .baseCost(Constants.T4_BASE_COST)
+                .baseValue(Constants.T4_BASE_PROD)
+                .costMultiplier(Constants.STD_COST_MULT)
+                .generate(coins)
+                .build();
+
+        g5 = new Generator.Builder(world)
+                .baseCost(Constants.T5_BASE_COST)
+                .baseValue(Constants.T5_BASE_PROD)
+                .costMultiplier(Constants.STD_COST_MULT)
+                .generate(coins)
+                .build();
+
+        g6 = new Generator.Builder(world)
+                .baseCost(Constants.T6_BASE_COST)
+                .baseValue(Constants.T6_BASE_PROD)
+                .costMultiplier(Constants.STD_COST_MULT)
+                .generate(coins)
+                .build();
+
+        g7 = new Generator.Builder(world)
+                .baseCost(Constants.T7_BASE_COST)
+                .baseValue(Constants.T7_BASE_PROD)
+                .costMultiplier(Constants.STD_COST_MULT)
+                .generate(coins)
+                .build();
+
+        g8 = new Generator.Builder(world)
+                .baseCost(Constants.T8_BASE_COST)
+                .baseValue(Constants.T8_BASE_PROD)
+                .costMultiplier(Constants.STD_COST_MULT)
+                .generate(coins)
+                .build();
+
+        g9 = new Generator.Builder(world)
+                .baseCost(Constants.T9_BASE_COST)
+                .baseValue(Constants.T9_BASE_PROD)
+                .costMultiplier(Constants.STD_COST_MULT)
+                .generate(coins)
+                .build();
+
+        g10 = new Generator.Builder(world)
+                .baseCost(Constants.T10_BASE_COST)
+                .baseValue(Constants.T10_BASE_PROD)
+                .costMultiplier(Constants.STD_COST_MULT)
+                .generate(coins)
+                .build();
+
+        g11 = new Generator.Builder(world)
+                .baseCost(Constants.T11_BASE_COST)
+                .baseValue(Constants.T11_BASE_PROD)
+                .costMultiplier(Constants.STD_COST_MULT)
+                .generate(coins)
                 .build();
 
         a1 = new Automator.Builder(world)
@@ -47,14 +116,72 @@ public class GameManager {
                 .tickRate(1.0)
                 .build();
 
-        printCoins = new Formatter.ForCurrency(coins)
-                .groupDigits() // Group digits into groups of three
-                .showHighestThousand() // Show only the highest triplet in the amount
-                .showDecimals(2) // Show two decimals if truncating lower numbers
+        a2 = new Automator.Builder(world)
+                .automate(g2)
+                .tickRate(1.0)
+                .build();
+
+        a3 = new Automator.Builder(world)
+                .automate(g3)
+                .tickRate(1.0)
+                .build();
+
+        a4 = new Automator.Builder(world)
+                .automate(g4)
+                .tickRate(1.0)
+                .build();
+
+        a5 = new Automator.Builder(world)
+                .automate(g5)
+                .tickRate(1.0)
+                .build();
+
+        a6 = new Automator.Builder(world)
+                .automate(g6)
+                .tickRate(1.0)
+                .build();
+
+        a7 = new Automator.Builder(world)
+                .automate(g7)
+                .tickRate(1.0)
+                .build();
+
+        a8 = new Automator.Builder(world)
+                .automate(g8)
+                .tickRate(1.0)
+                .build();
+
+        a9 = new Automator.Builder(world)
+                .automate(g9)
+                .tickRate(1.0)
+                .build();
+
+        a10 = new Automator.Builder(world)
+                .automate(g10)
+                .tickRate(1.0)
+                .build();
+
+        a11 = new Automator.Builder(world)
+                .automate(g11)
+                .tickRate(1.0)
                 .build();
 
         // Set all automator levels to 1 so that each generator automatically produces once a second.
         a1.levelUp();
+        a2.levelUp();
+        a3.levelUp();
+        a4.levelUp();
+        a5.levelUp();
+        a6.levelUp();
+        a7.levelUp();
+        a8.levelUp();
+        a9.levelUp();
+        a10.levelUp();
+        a11.levelUp();
+
+        if (MesoCiv.DEV_MODE) {
+            coins.add(BigInteger.valueOf(1000));
+        }
 
     }
 
@@ -66,8 +193,8 @@ public class GameManager {
         coins.add(BigInteger.valueOf(n));
     }
 
-    public String getCoins() {
-        return printCoins.toString();
+    public BigInteger getCoins() {
+        return coins.getValue();
     }
 
     /**
@@ -77,7 +204,7 @@ public class GameManager {
     public BigInteger getPerSecond() {
         BigInteger total = BigInteger.ZERO;
         for (Generator g : world.getGenerators()) {
-            total = total.add(g.getGeneratedAmount());
+            total = total.add(g.getGeneratedAmountCount());
         }
         return total;
     }
@@ -91,7 +218,16 @@ public class GameManager {
         BigInteger perSecond = BigInteger.ZERO;
         Generator g = world.getGenerators().get(tier - 1);
         if (g != null) {
-            perSecond = g.getGeneratedAmount();
+            perSecond = g.getGeneratedAmountCount();
+        }
+        return perSecond;
+    }
+
+    public BigInteger getPerSecondPerLevel(int tier) {
+        BigInteger perSecond = BigInteger.ZERO;
+        Generator g = world.getGenerators().get(tier - 1);
+        if (g != null) {
+            perSecond = g.getGeneratedAmountPerLevel();
         }
         return perSecond;
     }

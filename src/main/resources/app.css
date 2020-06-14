@@ -17,3 +17,16 @@
 .button:hover {
     -fx-scale-y: 1.03;
 }
+
+.coins-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-effect: dropshadow( gaussian , rgba(70,70,70,0.5) , 0,0,0,1 );
+}
+
+.tier-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #333333;
+    -fx-effect: dropshadow( gaussian , rgba(70,70,70,0.5) , 0,0,0,1 );
+}

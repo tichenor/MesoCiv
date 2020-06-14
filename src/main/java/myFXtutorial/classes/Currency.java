@@ -75,7 +75,7 @@ public class Currency implements Serializable {
         return name + ": " + getAmountAsString();
     }
 
-    BigInteger getValue() {
+    public BigInteger getValue() {
         return value;
     }
 }

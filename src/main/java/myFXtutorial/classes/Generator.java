@@ -162,17 +162,44 @@ public class Generator extends Purchasable implements Serializable {
         super(world, name);
     }
 
-    public BigInteger getGeneratedAmount() {
-        /*
-        The base amount generated is equal to
-        (baseProduction) * (productionMultiplier) ^ (level - 1).
-        This value is then possibly further altered by modifiers.
-         */
+    /**
+     * The base amount generated is equal to (baseProduction) * (productionMultiplier) ^ (level - 1).
+     * This value is then possibly further altered by modifiers.
+     *
+     * @return
+     */
+    public BigInteger getGeneratedAmountLevel() {
+
         if (level == 0) {
             return BigInteger.ZERO;
         }
         BigDecimal temp = new BigDecimal(baseProduction);
         temp = temp.multiply(BigDecimal.valueOf(Math.pow(productionMultiplier, level - 1)));
+        temp = processModifiers(temp);
+        return temp.toBigInteger();
+    }
+
+    /**
+     * The base amount is here equal to (baseProduction) * (level), effectively using the level as a counter of
+     * how many generators of a type is owned instead.
+     * @return
+     */
+    public BigInteger getGeneratedAmountCount() {
+        if (level == 0) {
+            return BigInteger.ZERO;
+        }
+        BigDecimal temp = new BigDecimal(baseProduction.multiply(BigInteger.valueOf(level)));
+        temp = processModifiers(temp);
+        return temp.toBigInteger();
+    }
+
+    /**
+     * Should only be used in conjunction with getGeneratedAmountCount. This method returns the increase in
+     * the amount generated if this generator is leveled up once.
+     * @return
+     */
+    public BigInteger getGeneratedAmountPerLevel() {
+        BigDecimal temp = new BigDecimal(baseProduction);
         temp = processModifiers(temp);
         return temp.toBigInteger();
     }
@@ -197,7 +224,7 @@ public class Generator extends Purchasable implements Serializable {
     }
 
     public void process() {
-        targetCurrency.add(getGeneratedAmount());
+        targetCurrency.add(getGeneratedAmountCount());
         timesProcessed++;
         if (callback != null) {
             callback.onProcessed();

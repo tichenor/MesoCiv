@@ -2,13 +2,19 @@ package main.java.myFXtutorial;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import main.java.myFXtutorial.classes.Purchasable;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import main.java.myFXtutorial.classes.PurchaseResult;
 import main.java.myFXtutorial.utils.Constants;
-import main.java.myFXtutorial.utils.StrFormatter;
+import main.java.myFXtutorial.utils.NumFormatter;
 
+import javax.tools.Tool;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +39,9 @@ public class Controller {
 
     @FXML private Label coinsLabel;
     @FXML private Label perSecondLabel;
+
+    @FXML private VBox tooltipBox;
+    @FXML private Label toolTipLabel;
 
     @FXML private Button t1Button;
     @FXML private Button t2Button;
@@ -90,6 +99,8 @@ public class Controller {
     @FXML private Label t11CountLabel;
     @FXML private Label t11ProductionLabel;
 
+    private NumFormatter numFormatter;
+
     /**
      * This method is called automatically once when the contents of the associated FXML file has been loaded.
      * Initial text of labels and buttons are set here. This occurs before the actual game model has been initialized,
@@ -99,6 +110,7 @@ public class Controller {
     private void initialize() {
         coinsLabel.setText("Coins: 0");
         perSecondLabel.setText("0/s");
+        toolTipLabel.setText("");
         // Set button texts
         t1Button.setText(Constants.T1_NAME);
         t2Button.setText(Constants.T2_NAME);
@@ -111,41 +123,6 @@ public class Controller {
         t9Button.setText(Constants.T9_NAME);
         t10Button.setText(Constants.T10_NAME);
         t11Button.setText(Constants.T11_NAME);
-
-        // Initialize label texts for structures
-        t1CostLabel.setText(StrFormatter.fCostLabel(0));
-        t1CountLabel.setText(StrFormatter.fCountLabel(0));
-        t1ProductionLabel.setText(StrFormatter.fProductionLabel(0));
-        t2CostLabel.setText(StrFormatter.fCostLabel(0));
-        t2CountLabel.setText(StrFormatter.fCountLabel(0));
-        t2ProductionLabel.setText(StrFormatter.fProductionLabel(0));
-        t3CostLabel.setText(StrFormatter.fCostLabel(0));
-        t3CountLabel.setText(StrFormatter.fCountLabel(0));
-        t3ProductionLabel.setText(StrFormatter.fProductionLabel(0));
-        t4CostLabel.setText(StrFormatter.fCostLabel(0));
-        t4CountLabel.setText(StrFormatter.fCountLabel(0));
-        t4ProductionLabel.setText(StrFormatter.fProductionLabel(0));
-        t5CostLabel.setText(StrFormatter.fCostLabel(0));
-        t5CountLabel.setText(StrFormatter.fCountLabel(0));
-        t5ProductionLabel.setText(StrFormatter.fProductionLabel(0));
-        t6CostLabel.setText(StrFormatter.fCostLabel(0));
-        t6CountLabel.setText(StrFormatter.fCountLabel(0));
-        t6ProductionLabel.setText(StrFormatter.fProductionLabel(0));
-        t7CostLabel.setText(StrFormatter.fCostLabel(0));
-        t7CountLabel.setText(StrFormatter.fCountLabel(0));
-        t7ProductionLabel.setText(StrFormatter.fProductionLabel(0));
-        t8CostLabel.setText(StrFormatter.fCostLabel(0));
-        t8CountLabel.setText(StrFormatter.fCountLabel(0));
-        t8ProductionLabel.setText(StrFormatter.fProductionLabel(0));
-        t9CostLabel.setText(StrFormatter.fCostLabel(0));
-        t9CountLabel.setText(StrFormatter.fCountLabel(0));
-        t9ProductionLabel.setText(StrFormatter.fProductionLabel(0));
-        t10CostLabel.setText(StrFormatter.fCostLabel(0));
-        t10CountLabel.setText(StrFormatter.fCountLabel(0));
-        t10ProductionLabel.setText(StrFormatter.fProductionLabel(0));
-        t11CostLabel.setText(StrFormatter.fCostLabel(0));
-        t11CountLabel.setText(StrFormatter.fCountLabel(0));
-        t11ProductionLabel.setText(StrFormatter.fProductionLabel(0));
 
         tierMap = new HashMap<>();
         tierMap.put(t1Button, 1);
@@ -162,10 +139,31 @@ public class Controller {
 
     }
 
+    public void postInitialize() {
+        // A helpful number formatter
+        numFormatter = new NumFormatter.Builder()
+                .groupDigits()
+                .showHighestThousand()
+                .showDecimals(2)
+                .useAbbreviations(Constants.NUM_ABBREVIATIONS)
+                .build();
+
+        // Tooltips/descriptions for various things
+        // Tooltips/descriptions use the built-in API of javaFX's Tooltip class, but the normal hover display isn't.
+        // Instead using a fixed area (tooltipBox) that displays the information whenever the mouse is hovering something.
+        //TODO: workaround for disabling standard hover tooltips is to set their visible duration to zero, not optimal
+        Tooltip t1ButtonTt = new Tooltip(Constants.T1_TOOLTIP);
+        t1ButtonTt.setShowDuration(Duration.ZERO); // info is displayed in tooltip box, standard tooltip shouldn't show
+        t1Button.setTooltip(t1ButtonTt);
+
+        // Set the tooltip display label to wrap text properly around the tooltip box
+        toolTipLabel.wrapTextProperty().bind(tooltipBox.fillWidthProperty());
+    }
+
     @FXML
     private void increment() {
         gameManager.increment(1);
-        coinsLabel.setText("Coins: " + gameManager.getCoins());
+        updateAll();
     }
 
     /**
@@ -176,7 +174,7 @@ public class Controller {
     private void handleTierButtonAction(ActionEvent event) {
         //TODO: Make this handle all purchase events
         PurchaseResult result = null;
-        Object source;
+        Object source = null;
         source = (Button) event.getSource();
         if (source != null) {
             result = gameManager.onPurchase(Purchasables.TIER, tierMap.get(source));
@@ -186,14 +184,81 @@ public class Controller {
         }
     }
 
+    @FXML
+    private void showTooltip(MouseEvent event) {
+        Control source = null;
+        source = (Control) event.getSource();
+        if (source != null) {
+            toolTipLabel.setText(source.getTooltip().getText());
+        }
+    }
+
+    @FXML
+    private void clearTooltip(MouseEvent event) {
+        toolTipLabel.setText("");
+    }
+
     public void updateAll() {
         //TODO: Make this update everything and implement StrFormatter for all labels
-        coinsLabel.setText("Coins: " + gameManager.getCoins());
-        perSecondLabel.setText(gameManager.getPerSecond() + "/s");
+        coinsLabel.setText("Coins: " + numFormatter.format(gameManager.getCoins()));
+        perSecondLabel.setText(numFormatter.format(gameManager.getPerSecond()) + "/s");
 
-        t1ProductionLabel.setText(gameManager.getPerSecond(1) + "/s");
-        t1CountLabel.setText("Level: " + gameManager.getLevelOf(1));
-        t1CostLabel.setText("Cost: " + gameManager.getCostOf(1));
+        t1ProductionLabel.setText(productionLabel(1));
+        t1CountLabel.setText(countLabel(1));
+        t1CostLabel.setText(costLabel(1));
+
+        t2ProductionLabel.setText(productionLabel(2));
+        t2CountLabel.setText(countLabel(2));
+        t2CostLabel.setText(costLabel(2));
+
+        t3ProductionLabel.setText(productionLabel(3));
+        t3CountLabel.setText(countLabel(3));
+        t3CostLabel.setText(costLabel(3));
+
+        t4ProductionLabel.setText(productionLabel(4));
+        t4CountLabel.setText(countLabel(4));
+        t4CostLabel.setText(costLabel(4));
+
+        t5ProductionLabel.setText(productionLabel(5));
+        t5CountLabel.setText(countLabel(5));
+        t5CostLabel.setText(costLabel(5));
+
+        t6ProductionLabel.setText(productionLabel(6));
+        t6CountLabel.setText(countLabel(6));
+        t6CostLabel.setText(costLabel(6));
+
+        t7ProductionLabel.setText(productionLabel(7));
+        t7CountLabel.setText(countLabel(7));
+        t7CostLabel.setText(costLabel(7));
+
+        t8ProductionLabel.setText(productionLabel(8));
+        t8CountLabel.setText(countLabel(8));
+        t8CostLabel.setText(costLabel(8));
+
+        t9ProductionLabel.setText(productionLabel(9));
+        t9CountLabel.setText(countLabel(9));
+        t9CostLabel.setText(costLabel(9));
+
+        t10ProductionLabel.setText(productionLabel(10));
+        t10CountLabel.setText(countLabel(10));
+        t10CostLabel.setText(costLabel(10));
+
+        t11ProductionLabel.setText(productionLabel(11));
+        t11CountLabel.setText(countLabel(11));
+        t11CostLabel.setText(costLabel(11));
+
+    }
+
+    private String productionLabel(int tier) {
+        return gameManager.getPerSecond(tier) + "/s (+" + gameManager.getPerSecondPerLevel(tier) + "/s)";
+    }
+
+    private String countLabel(int tier) {
+        return "Owned: " + gameManager.getLevelOf(tier);
+    }
+
+    private String costLabel(int tier) {
+        return "Cost: " + numFormatter.format(gameManager.getCostOf(tier)) + " coins";
     }
 
     public void setGameManager(GameManager gm) {
