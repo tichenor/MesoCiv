@@ -1,0 +1,4 @@
+- (PARTIAL) read in game data from external file (e.g. JSON) instead of having a static Constants class
+    - made an Assets class that reads from a .csv file to load building (tier) data, remains to extend this to upgrades and upgrade requirements
+- (DONE) make tooltips for "tier" buttons work the same as for "upgrade" buttons for coherence
+- save/load...

@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import main.java.myFXtutorial.classes.Modifier;
 import main.java.myFXtutorial.classes.PurchaseResult;
+import main.java.myFXtutorial.utils.Assets;
 import main.java.myFXtutorial.utils.Constants;
 import main.java.myFXtutorial.utils.NumFormatter;
 
@@ -178,14 +179,6 @@ public class Controller {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.ENGLISH);
         upgradeNumFormatter = new DecimalFormat("0.00", symbols);
 
-        // Tooltips/descriptions for various things
-        // Tooltips/descriptions use the built-in API of javaFX's Tooltip class, but the normal hover display isn't.
-        // Instead using a fixed area (tooltipBox) that displays the information whenever the mouse is hovering something.
-        //TODO: workaround for disabling standard hover tooltips is to set their visible duration to zero, not optimal
-        Tooltip t1ButtonTt = new Tooltip(Constants.T1_TOOLTIP);
-        t1ButtonTt.setShowDuration(Duration.ZERO); // info is displayed in tooltip box, standard tooltip shouldn't show
-        t1Button.setTooltip(t1ButtonTt);
-
         // Set the tooltip display labels to wrap text properly around the tooltip box
         tooltipTitle.wrapTextProperty().bind(tooltipBox.fillWidthProperty());
         tooltipDescription.wrapTextProperty().bind(tooltipBox.fillWidthProperty());
@@ -218,12 +211,17 @@ public class Controller {
         }
     }
 
+    /**
+     * Should only be assigned to tier buttons in the FXML file.
+     * @param event
+     */
     @FXML
-    private void showTooltip(MouseEvent event) {
-        Control source = null;
-        source = (Control) event.getSource();
+    private void showTierInfo(MouseEvent event) {
+        Button source = null;
+        source = (Button) event.getSource();
         if (source != null) {
-            tooltipTitle.setText(source.getTooltip().getText());
+            tooltipTitle.setText(Assets.tierName(tierMap.get(source)));
+            tooltipDescription.setText(Assets.tierDescription(tierMap.get(source)));
         }
     }
 

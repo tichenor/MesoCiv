@@ -12,9 +12,9 @@ import java.io.InputStream;
 public class ViewManager {
 
     public static final int SCENE_WIDTH = 1920, SCENE_HEIGHT = 1080;
-    public static final String WINDOW_TITLE = "MesoCiv";
-    public static final String FXML_PATH = "/mainScene.fxml";
-    public static final String CSS_PATH = "/app.css";
+    private static final String WINDOW_TITLE = "MesoCiv";
+    private static final String FXML_PATH = "/mainScene.fxml";
+    private static final String CSS_PATH = "/app.css";
 
     private Stage primaryStage;
     private Scene primaryScene;

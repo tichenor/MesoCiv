@@ -1,6 +1,7 @@
 package main.java.myFXtutorial;
 
 import main.java.myFXtutorial.classes.*;
+import main.java.myFXtutorial.utils.Assets;
 import main.java.myFXtutorial.utils.Constants;
 
 import java.math.BigInteger;
@@ -41,90 +42,90 @@ public class GameManager {
 
         // Generators must be created in order so that indicies of world.getGenerators() is in the correct order
         g1 = new Generator.Builder(world)
-                .name(Constants.T1_NAME)
-                .baseCost(Constants.T1_BASE_COST)
-                .baseValue(Constants.T1_BASE_PROD)
-                .costMultiplier(Constants.STD_COST_MULT)
+                .name(Assets.tierName(1))
+                .baseCost(Assets.tierBaseCost(1))
+                .baseValue(Assets.tierBaseValue(1))
+                .costMultiplier(Assets.tierCostMultiplier(1))
                 .generate(coins)
                 .build();
 
         g2 = new Generator.Builder(world)
-                .name(Constants.T2_NAME)
-                .baseCost(Constants.T2_BASE_COST)
-                .baseValue(Constants.T2_BASE_PROD)
-                .costMultiplier(Constants.STD_COST_MULT)
+                .name(Assets.tierName(2))
+                .baseCost(Assets.tierBaseCost(2))
+                .baseValue(Assets.tierBaseValue(2))
+                .costMultiplier(Assets.tierCostMultiplier(2))
                 .generate(coins)
                 .build();
 
         g3 = new Generator.Builder(world)
-                .name(Constants.T3_NAME)
-                .baseCost(Constants.T3_BASE_COST)
-                .baseValue(Constants.T3_BASE_PROD)
-                .costMultiplier(Constants.STD_COST_MULT)
+                .name(Assets.tierName(3))
+                .baseCost(Assets.tierBaseCost(3))
+                .baseValue(Assets.tierBaseValue(3))
+                .costMultiplier(Assets.tierCostMultiplier(3))
                 .generate(coins)
                 .build();
 
         g4 = new Generator.Builder(world)
-                .name(Constants.T4_NAME)
-                .baseCost(Constants.T4_BASE_COST)
-                .baseValue(Constants.T4_BASE_PROD)
-                .costMultiplier(Constants.STD_COST_MULT)
+                .name(Assets.tierName(4))
+                .baseCost(Assets.tierBaseCost(4))
+                .baseValue(Assets.tierBaseValue(4))
+                .costMultiplier(Assets.tierCostMultiplier(4))
                 .generate(coins)
                 .build();
 
         g5 = new Generator.Builder(world)
-                .name(Constants.T5_NAME)
-                .baseCost(Constants.T5_BASE_COST)
-                .baseValue(Constants.T5_BASE_PROD)
-                .costMultiplier(Constants.STD_COST_MULT)
+                .name(Assets.tierName(5))
+                .baseCost(Assets.tierBaseCost(5))
+                .baseValue(Assets.tierBaseValue(5))
+                .costMultiplier(Assets.tierCostMultiplier(5))
                 .generate(coins)
                 .build();
 
         g6 = new Generator.Builder(world)
-                .name(Constants.T6_NAME)
-                .baseCost(Constants.T6_BASE_COST)
-                .baseValue(Constants.T6_BASE_PROD)
-                .costMultiplier(Constants.STD_COST_MULT)
+                .name(Assets.tierName(6))
+                .baseCost(Assets.tierBaseCost(6))
+                .baseValue(Assets.tierBaseValue(6))
+                .costMultiplier(Assets.tierCostMultiplier(6))
                 .generate(coins)
                 .build();
 
         g7 = new Generator.Builder(world)
-                .name(Constants.T7_NAME)
-                .baseCost(Constants.T7_BASE_COST)
-                .baseValue(Constants.T7_BASE_PROD)
-                .costMultiplier(Constants.STD_COST_MULT)
+                .name(Assets.tierName(7))
+                .baseCost(Assets.tierBaseCost(7))
+                .baseValue(Assets.tierBaseValue(7))
+                .costMultiplier(Assets.tierCostMultiplier(7))
                 .generate(coins)
                 .build();
 
         g8 = new Generator.Builder(world)
-                .name(Constants.T8_NAME)
-                .baseCost(Constants.T8_BASE_COST)
-                .baseValue(Constants.T8_BASE_PROD)
-                .costMultiplier(Constants.STD_COST_MULT)
+                .name(Assets.tierName(8))
+                .baseCost(Assets.tierBaseCost(8))
+                .baseValue(Assets.tierBaseValue(8))
+                .costMultiplier(Assets.tierCostMultiplier(8))
                 .generate(coins)
                 .build();
 
         g9 = new Generator.Builder(world)
-                .name(Constants.T9_NAME)
-                .baseCost(Constants.T9_BASE_COST)
-                .baseValue(Constants.T9_BASE_PROD)
-                .costMultiplier(Constants.STD_COST_MULT)
+                .name(Assets.tierName(9))
+                .baseCost(Assets.tierBaseCost(9))
+                .baseValue(Assets.tierBaseValue(9))
+                .costMultiplier(Assets.tierCostMultiplier(9))
                 .generate(coins)
                 .build();
 
         g10 = new Generator.Builder(world)
-                .name(Constants.T10_NAME)
-                .baseCost(Constants.T10_BASE_COST)
-                .baseValue(Constants.T10_BASE_PROD)
-                .costMultiplier(Constants.STD_COST_MULT)
+                .name(Assets.tierName(10))
+                .baseCost(Assets.tierBaseCost(10))
+                .baseValue(Assets.tierBaseValue(10))
+                .costMultiplier(Assets.tierCostMultiplier(10))
                 .generate(coins)
                 .build();
 
         g11 = new Generator.Builder(world)
-                .name(Constants.T11_NAME)
-                .baseCost(Constants.T11_BASE_COST)
-                .baseValue(Constants.T11_BASE_PROD)
-                .costMultiplier(Constants.STD_COST_MULT)
+                .name(Assets.tierName(11))
+                .baseCost(Assets.tierBaseCost(11))
+                .baseValue(Assets.tierBaseValue(11))
+                .costMultiplier(Assets.tierCostMultiplier(11))
                 .generate(coins)
                 .build();
 
