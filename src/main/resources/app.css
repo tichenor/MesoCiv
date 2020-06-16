@@ -18,6 +18,24 @@
     -fx-scale-y: 1.03;
 }
 
+.upgrade-button {
+    -fx-font-size: 12px;
+}
+
+.tooltip-title-label {
+    -fx-font-weight: bold;
+}
+
+.tooltip-description-label {
+    -fx-font-style: italic;
+}
+
+.tooltip-effect-label {
+}
+
+.tooltip-cost-label {
+}
+
 .coins-label {
     -fx-font-size: 20px;
     -fx-font-weight: bold;

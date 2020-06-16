@@ -382,9 +382,6 @@
                     </children>
                 </GridPane>
             </top>
-            <left>
-                <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-            </left>
             <bottom>
                 <GridPane BorderPane.alignment="CENTER">
                     <columnConstraints>
@@ -401,12 +398,18 @@
             <center>
                 <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#increment" prefHeight="200.0" prefWidth="200.0" styleClass="background" stylesheets="@main/resources/app.css" BorderPane.alignment="CENTER">
                <children>
-                  <VBox fx:id="tooltipBox" layoutX="1143.0" layoutY="585.0" prefHeight="301.0" prefWidth="313.0">
+                  <VBox fx:id="tooltipBox" layoutX="800.0" layoutY="600.0" prefHeight="301.0" prefWidth="260.0">
                      <children>
-                        <Label fx:id="toolTipLabel" text="Label" />
+                        <Label fx:id="tooltipTitle" styleClass="tooltip-title-label" text="Label" />
+                        <Label fx:id="tooltipDescription" styleClass="tooltip-description-label" text="Label" />
+                        <Label fx:id="tooltipEffect" styleClass="tooltip-effect-label" text="Label" />
+                        <Label fx:id="tooltipCost" styleClass="tooltip-cost-label" text="Label" />
                      </children></VBox>
                </children></Pane>
             </center>
+         <left>
+            <TilePane fx:id="upgradePanel" prefHeight="900.0" prefTileHeight="79.0" prefTileWidth="117.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+         </left>
         </BorderPane>
     </children>
 </AnchorPane>

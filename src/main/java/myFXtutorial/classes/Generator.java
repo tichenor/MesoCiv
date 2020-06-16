@@ -215,7 +215,7 @@ public class Generator extends Purchasable implements Serializable {
             return val;
         }
         for (GeneratorModifier m : modifiers) {
-            double d = m.getProductionMultiplier();
+            double d = m.getMultiplier();
             if (d != 1.0) {
                 val = val.multiply(new BigDecimal(d));
             }

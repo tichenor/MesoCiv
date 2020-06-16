@@ -11,6 +11,7 @@ import java.io.Serializable;
 public abstract class Modifier extends Purchasable implements Serializable {
 
     private boolean enabled = false;
+    private long levelRequirement = 0;
 
     private Modifier(World world) {
         super(world);
@@ -18,6 +19,8 @@ public abstract class Modifier extends Purchasable implements Serializable {
 
     protected abstract void onEnable();
     protected abstract void onDisable();
+    public abstract double getMultiplier();
+    public abstract long getLevelRequirement();
 
     public void enable() {
         if (!enabled) {
@@ -37,6 +40,10 @@ public abstract class Modifier extends Purchasable implements Serializable {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public Generator getTarget() {
+        return null;
     }
 
     /**
@@ -70,15 +77,26 @@ public abstract class Modifier extends Purchasable implements Serializable {
                 getWorld().setSpeedMultiplier(d);
             }
         }
+
+        @Override
+        public double getMultiplier() {
+            return speedMultiplier;
+        }
+
+        @Override
+        public long getLevelRequirement() {
+            return 0;
+        }
     }
 
     /**
      * Modifier for generators. Modifies properties of a target generator.
      */
-    static class GeneratorModifier extends Modifier {
+    public static class GeneratorModifier extends Modifier {
 
         private final Generator generator;
         private double productionMultiplier = 1.0;
+        private long levelRequirement = 0;
 
         GeneratorModifier(Generator g) {
             super(g.getWorld());
@@ -96,9 +114,21 @@ public abstract class Modifier extends Purchasable implements Serializable {
             generator.detachModifier(this);
         }
 
-        double getProductionMultiplier() {
+        @Override
+        public double getMultiplier() {
             return productionMultiplier;
         }
+
+        @Override
+        public long getLevelRequirement() {
+            return levelRequirement;
+        }
+
+        @Override
+        public Generator getTarget() {
+            return generator;
+        }
+
     }
 
     /**
@@ -137,6 +167,7 @@ public abstract class Modifier extends Purchasable implements Serializable {
 
             private Generator generator;
             private double productionMultiplier = 1.0;
+            private long levelRequirement = 0;
 
             GeneratorTarget(Generator g) {
                 generator = g;
@@ -147,9 +178,15 @@ public abstract class Modifier extends Purchasable implements Serializable {
                 return this;
             }
 
+            public GeneratorTarget levelRequirement(long lvl) {
+                levelRequirement = lvl;
+                return this;
+            }
+
             public Modifier build() {
                 GeneratorModifier gm = new GeneratorModifier(generator);
                 gm.productionMultiplier = productionMultiplier;
+                gm.levelRequirement = levelRequirement;
                 return gm;
             }
 
@@ -174,7 +211,6 @@ public abstract class Modifier extends Purchasable implements Serializable {
         public final GeneratorTarget modify(Generator generator) {
             return new GeneratorTarget(generator);
         }
-
 
     }
 

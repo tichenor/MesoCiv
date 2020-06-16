@@ -1,21 +1,26 @@
 package main.java.myFXtutorial;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import main.java.myFXtutorial.classes.Modifier;
 import main.java.myFXtutorial.classes.PurchaseResult;
 import main.java.myFXtutorial.utils.Constants;
 import main.java.myFXtutorial.utils.NumFormatter;
 
-import javax.tools.Tool;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -36,12 +41,22 @@ public class Controller {
      * This field allows lookup of the integer representing the tier of a building/structure corresponding to a button.
      */
     private Map<Button, Integer> tierMap;
+    /**
+     * For looking up what upgrade a button represents.
+     */
+    private Map<Button, Modifier> upgradeButtonMap;
 
     @FXML private Label coinsLabel;
     @FXML private Label perSecondLabel;
 
     @FXML private VBox tooltipBox;
-    @FXML private Label toolTipLabel;
+    // Labels for displaying tooltip information
+    @FXML private Label tooltipTitle;
+    @FXML private Label tooltipDescription;
+    @FXML private Label tooltipEffect;
+    @FXML private Label tooltipCost;
+
+    @FXML private TilePane upgradePanel;
 
     @FXML private Button t1Button;
     @FXML private Button t2Button;
@@ -100,6 +115,8 @@ public class Controller {
     @FXML private Label t11ProductionLabel;
 
     private NumFormatter numFormatter;
+    private DecimalFormat upgradeNumFormatter;
+
 
     /**
      * This method is called automatically once when the contents of the associated FXML file has been loaded.
@@ -108,9 +125,13 @@ public class Controller {
      */
     @FXML
     private void initialize() {
+        // Coin info labels
         coinsLabel.setText("Coins: 0");
         perSecondLabel.setText("0/s");
-        toolTipLabel.setText("");
+
+        // Tooltip area labels
+        clearTooltip();
+
         // Set button texts
         t1Button.setText(Constants.T1_NAME);
         t2Button.setText(Constants.T2_NAME);
@@ -137,8 +158,13 @@ public class Controller {
         tierMap.put(t10Button, 10);
         tierMap.put(t11Button, 11);
 
+        upgradeButtonMap = new HashMap<>();
+
     }
 
+    /**
+     * Intended to be run once _after_ the game manager has been instantiated.
+     */
     public void postInitialize() {
         // A helpful number formatter
         numFormatter = new NumFormatter.Builder()
@@ -148,6 +174,10 @@ public class Controller {
                 .useAbbreviations(Constants.NUM_ABBREVIATIONS)
                 .build();
 
+        // Number formatting for number on upgrade buttons
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.ENGLISH);
+        upgradeNumFormatter = new DecimalFormat("0.00", symbols);
+
         // Tooltips/descriptions for various things
         // Tooltips/descriptions use the built-in API of javaFX's Tooltip class, but the normal hover display isn't.
         // Instead using a fixed area (tooltipBox) that displays the information whenever the mouse is hovering something.
@@ -156,8 +186,11 @@ public class Controller {
         t1ButtonTt.setShowDuration(Duration.ZERO); // info is displayed in tooltip box, standard tooltip shouldn't show
         t1Button.setTooltip(t1ButtonTt);
 
-        // Set the tooltip display label to wrap text properly around the tooltip box
-        toolTipLabel.wrapTextProperty().bind(tooltipBox.fillWidthProperty());
+        // Set the tooltip display labels to wrap text properly around the tooltip box
+        tooltipTitle.wrapTextProperty().bind(tooltipBox.fillWidthProperty());
+        tooltipDescription.wrapTextProperty().bind(tooltipBox.fillWidthProperty());
+        tooltipEffect.wrapTextProperty().bind(tooltipBox.fillWidthProperty());
+        tooltipCost.wrapTextProperty().bind(tooltipBox.fillWidthProperty());
     }
 
     @FXML
@@ -174,13 +207,14 @@ public class Controller {
     private void handleTierButtonAction(ActionEvent event) {
         //TODO: Make this handle all purchase events
         PurchaseResult result = null;
-        Object source = null;
+        Button source = null;
         source = (Button) event.getSource();
         if (source != null) {
             result = gameManager.onPurchase(Purchasables.TIER, tierMap.get(source));
         }
         if (result == PurchaseResult.OK) {
             updateAll();
+            checkForAvailableUpgrades(tierMap.get(source));
         }
     }
 
@@ -189,13 +223,105 @@ public class Controller {
         Control source = null;
         source = (Control) event.getSource();
         if (source != null) {
-            toolTipLabel.setText(source.getTooltip().getText());
+            tooltipTitle.setText(source.getTooltip().getText());
         }
     }
 
     @FXML
     private void clearTooltip(MouseEvent event) {
-        toolTipLabel.setText("");
+        clearTooltip();
+    }
+
+    /**
+     * Dynamically generate upgrade buttons whenever an upgrade becomes available.
+     * @param tier
+     */
+    private void checkForAvailableUpgrades(int tier) {
+        List<Modifier> t1upgrades = gameManager.getAvailableUpgradesFor(tier);
+        for (Modifier m : t1upgrades) {
+
+            // Make upgrade button corresponding to the available modifier
+            Button upgButton = new Button(m.getName());
+
+            // Set on action (click), mouse entered & mouse exited events (display description)
+            upgButton.setOnAction(upgButtonHandler());
+            upgButton.setOnMouseEntered(upgButtonMouseEntered());
+            upgButton.setOnMouseExited(upgButtonMouseExited());
+
+            // Add style and attach button to the upgrade panel
+            upgButton.getStyleClass().add("upgrade-button");
+            upgButton.setPrefSize(117, 80);
+            upgradePanel.getChildren().add(upgButton);
+
+            // Track which upgrade (modifier) a button represents
+            upgradeButtonMap.put(upgButton, m);
+        }
+    }
+
+    /**
+     * Generate an on-action event (clicking a button) for upgrade buttons generated dynamically.
+     * @return
+     */
+    private EventHandler<ActionEvent> upgButtonHandler() {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                PurchaseResult result = null;
+                Button source = null;
+                source = (Button) event.getSource();
+                if (source != null) {
+                    result = gameManager.onUpgrade(upgradeButtonMap.get(source));
+                }
+                if (result == PurchaseResult.OK) {
+                    updateAll();
+                    upgradePanel.getChildren().remove(source);
+                }
+            }
+        };
+    }
+
+    /**
+     * Dynamic version of showTooltip (create an on-mouse-entered event) for dynamically generated buttons.
+     * @return
+     */
+    private EventHandler<MouseEvent> upgButtonMouseEntered() {
+        return new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                Button source = null;
+                source = (Button) mouseEvent.getSource();
+                if (source != null) {
+                    Modifier upgrade = upgradeButtonMap.get(source);
+                    if (upgrade != null) {
+                        tooltipTitle.setText(upgrade.getName() + "\n(" + upgrade.getTarget().getName() + " technology)");
+                        tooltipDescription.setText(upgrade.getDescription());
+                        tooltipEffect.setText("Production bonus: x" + upgradeNumFormatter.format(upgrade.getMultiplier()));
+                        tooltipCost.setText("Cost: " + numFormatter.format(upgrade.getBaseCost()));
+                    }
+                }
+            }
+        };
+    }
+
+    /**
+     * Dynamic version of clearTooltip (when mouse exits, clear the text).
+     * @return
+     */
+    private EventHandler<MouseEvent> upgButtonMouseExited() {
+        return new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                clearTooltip();
+
+            }
+        };
+    }
+
+    private void clearTooltip() {
+        tooltipTitle.setText("");
+        tooltipDescription.setText("");
+        tooltipEffect.setText("");
+        tooltipCost.setText("");
     }
 
     public void updateAll() {

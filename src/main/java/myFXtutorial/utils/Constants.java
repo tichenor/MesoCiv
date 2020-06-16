@@ -61,4 +61,21 @@ public class Constants {
 
 
     public static final String T1_TOOLTIP = "Tooltip placeholder. Does this have textwrap? I guess we will soon find out about that, hehe.";
+
+    public static final String T1_U1_NAME = "Open courtyards";
+    public static final String T1_U1_DESCR = "Provides a cooling effect by creating convection currents.";
+    public static final BigInteger T1_U1_COST = new BigInteger("100");
+
+    public static final String T1_U2_NAME = "No name";
+    public static final String T1_U2_DESCR = "No description";
+    public static final BigInteger T1_U2_COST = new BigInteger("500");
+
+    public static final String T2_U1_NAME = "Local culture centre";
+    public static final String T2_U1_DESCR = "A place to hold events and holiday celebrations.";
+    public static final BigInteger T2_U1_COST = new BigInteger("600");
+
+    public static final String T2_U2_NAME = "Village hall";
+    public static final String T2_U2_DESCR = "Expand the hamlet to have its own administrative building. " +
+            "It can be used for a variety of things such as hosting public meetings and for trade.";
+    public static final BigInteger T2_U2_COST = new BigInteger("3750");
 }
