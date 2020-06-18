@@ -238,6 +238,9 @@ public class Controller {
         List<Modifier> t1upgrades = gameManager.getAvailableUpgradesFor(tier);
         for (Modifier m : t1upgrades) {
 
+            if (upgradeButtonMap.containsValue(m))
+                continue; // Don't want to add more than one button per upgrade
+
             // Make upgrade button corresponding to the available modifier
             Button upgButton = new Button(m.getName());
 
@@ -374,7 +377,9 @@ public class Controller {
     }
 
     private String productionLabel(int tier) {
-        return gameManager.getPerSecond(tier) + "/s (+" + gameManager.getPerSecondPerLevel(tier) + "/s)";
+        String perSecond = numFormatter.format(gameManager.getPerSecond(tier));
+        String perLevel = numFormatter.format(gameManager.getPerSecondPerLevel(tier));
+        return perSecond + "/s (+" + perLevel + "/s)";
     }
 
     private String countLabel(int tier) {

@@ -1,4 +1,15 @@
 
+@font-face {
+    font-style: italic;
+    font-weight: bold;
+    src: url('fonts/CoinageCapsKrugerGray.ttf');
+}
+
+.root {
+    -fx-font-family: 'Palatino Linotype';
+    -fx-font-size: 14px;
+}
+
 .background {
     -fx-background-size: 100% 100%;
 }
@@ -8,7 +19,8 @@
     -fx-background-image: url('basicUI/PNG/buttonLong_blue.png');
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
-    -fx-font-size: 14px;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
     -fx-border-color: black;
     -fx-border-width: 1;
     -fx-border-insets: 0.5;
@@ -19,7 +31,7 @@
 }
 
 .upgrade-button {
-    -fx-font-size: 12px;
+    -fx-font-size: 14px;
 }
 
 .tooltip-title-label {

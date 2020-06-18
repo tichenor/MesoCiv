@@ -1,4 +1,16 @@
 - (PARTIAL) read in game data from external file (e.g. JSON) instead of having a static Constants class
     - made an Assets class that reads from a .csv file to load building (tier) data, remains to extend this to upgrades and upgrade requirements
+
 - (DONE) make tooltips for "tier" buttons work the same as for "upgrade" buttons for coherence
+
 - save/load...
+
+- gradle/maven?
+
+- find some better way to access/store generators than to have them appended to an array world.generators in order
+
+- fix upgrade appearing multiple times if leveling past level requirement without purchasing upgrade
+
+- work on a cleaner solution to loading and initializing tiers and tier upgrades (Assets and GameManager)
+
+- change the delimiter in .csv files to not be a comma so that descriptions can use it without having to create a workaround

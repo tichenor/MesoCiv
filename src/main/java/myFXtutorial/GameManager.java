@@ -21,11 +21,8 @@ public class GameManager {
     // ALL AUTOMATORS TICK ONCE A SECOND; THIS GAME DOESN'T USE AUTOMATION AS A MECHANIC.
     private Automator a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11;
 
-    private Formatter printCoins;
-
     private Map<Generator, List<Modifier>> availableUpgrades = new HashMap<>();
 
-    private double testTimer = 0.0;
 
     public GameManager() {
         world = new World();
@@ -40,217 +37,49 @@ public class GameManager {
                 .name("Coins")
                 .build();
 
-        // Generators must be created in order so that indicies of world.getGenerators() is in the correct order
-        g1 = new Generator.Builder(world)
-                .name(Assets.tierName(1))
-                .baseCost(Assets.tierBaseCost(1))
-                .baseValue(Assets.tierBaseValue(1))
-                .costMultiplier(Assets.tierCostMultiplier(1))
-                .generate(coins)
-                .build();
-
-        g2 = new Generator.Builder(world)
-                .name(Assets.tierName(2))
-                .baseCost(Assets.tierBaseCost(2))
-                .baseValue(Assets.tierBaseValue(2))
-                .costMultiplier(Assets.tierCostMultiplier(2))
-                .generate(coins)
-                .build();
-
-        g3 = new Generator.Builder(world)
-                .name(Assets.tierName(3))
-                .baseCost(Assets.tierBaseCost(3))
-                .baseValue(Assets.tierBaseValue(3))
-                .costMultiplier(Assets.tierCostMultiplier(3))
-                .generate(coins)
-                .build();
-
-        g4 = new Generator.Builder(world)
-                .name(Assets.tierName(4))
-                .baseCost(Assets.tierBaseCost(4))
-                .baseValue(Assets.tierBaseValue(4))
-                .costMultiplier(Assets.tierCostMultiplier(4))
-                .generate(coins)
-                .build();
-
-        g5 = new Generator.Builder(world)
-                .name(Assets.tierName(5))
-                .baseCost(Assets.tierBaseCost(5))
-                .baseValue(Assets.tierBaseValue(5))
-                .costMultiplier(Assets.tierCostMultiplier(5))
-                .generate(coins)
-                .build();
-
-        g6 = new Generator.Builder(world)
-                .name(Assets.tierName(6))
-                .baseCost(Assets.tierBaseCost(6))
-                .baseValue(Assets.tierBaseValue(6))
-                .costMultiplier(Assets.tierCostMultiplier(6))
-                .generate(coins)
-                .build();
-
-        g7 = new Generator.Builder(world)
-                .name(Assets.tierName(7))
-                .baseCost(Assets.tierBaseCost(7))
-                .baseValue(Assets.tierBaseValue(7))
-                .costMultiplier(Assets.tierCostMultiplier(7))
-                .generate(coins)
-                .build();
-
-        g8 = new Generator.Builder(world)
-                .name(Assets.tierName(8))
-                .baseCost(Assets.tierBaseCost(8))
-                .baseValue(Assets.tierBaseValue(8))
-                .costMultiplier(Assets.tierCostMultiplier(8))
-                .generate(coins)
-                .build();
-
-        g9 = new Generator.Builder(world)
-                .name(Assets.tierName(9))
-                .baseCost(Assets.tierBaseCost(9))
-                .baseValue(Assets.tierBaseValue(9))
-                .costMultiplier(Assets.tierCostMultiplier(9))
-                .generate(coins)
-                .build();
-
-        g10 = new Generator.Builder(world)
-                .name(Assets.tierName(10))
-                .baseCost(Assets.tierBaseCost(10))
-                .baseValue(Assets.tierBaseValue(10))
-                .costMultiplier(Assets.tierCostMultiplier(10))
-                .generate(coins)
-                .build();
-
-        g11 = new Generator.Builder(world)
-                .name(Assets.tierName(11))
-                .baseCost(Assets.tierBaseCost(11))
-                .baseValue(Assets.tierBaseValue(11))
-                .costMultiplier(Assets.tierCostMultiplier(11))
-                .generate(coins)
-                .build();
-
-        a1 = new Automator.Builder(world)
-                .automate(g1)
-                .tickRate(1.0)
-                .build();
-
-        a2 = new Automator.Builder(world)
-                .automate(g2)
-                .tickRate(1.0)
-                .build();
-
-        a3 = new Automator.Builder(world)
-                .automate(g3)
-                .tickRate(1.0)
-                .build();
-
-        a4 = new Automator.Builder(world)
-                .automate(g4)
-                .tickRate(1.0)
-                .build();
-
-        a5 = new Automator.Builder(world)
-                .automate(g5)
-                .tickRate(1.0)
-                .build();
-
-        a6 = new Automator.Builder(world)
-                .automate(g6)
-                .tickRate(1.0)
-                .build();
-
-        a7 = new Automator.Builder(world)
-                .automate(g7)
-                .tickRate(1.0)
-                .build();
-
-        a8 = new Automator.Builder(world)
-                .automate(g8)
-                .tickRate(1.0)
-                .build();
-
-        a9 = new Automator.Builder(world)
-                .automate(g9)
-                .tickRate(1.0)
-                .build();
-
-        a10 = new Automator.Builder(world)
-                .automate(g10)
-                .tickRate(1.0)
-                .build();
-
-        a11 = new Automator.Builder(world)
-                .automate(g11)
-                .tickRate(1.0)
-                .build();
-
-        // Set all automator levels to 1 so that each generator automatically produces once a second.
-        a1.levelUp();
-        a2.levelUp();
-        a3.levelUp();
-        a4.levelUp();
-        a5.levelUp();
-        a6.levelUp();
-        a7.levelUp();
-        a8.levelUp();
-        a9.levelUp();
-        a10.levelUp();
-        a11.levelUp();
-
-        // Testing some upgrades
-        Modifier g1u1 = new Modifier.Builder()
-                .modify(g1)
-                .productionMultiplier(2.0)
-                .levelRequirement(10)
-                .build();
-        g1u1.setName(Constants.T1_U1_NAME);
-        g1u1.setDescription(Constants.T1_U1_DESCR);
-        g1u1.setBaseCost(Constants.T1_U1_COST);
-
-        Modifier g1u2 = new Modifier.Builder()
-                .modify(g1)
-                .productionMultiplier(2.0)
-                .levelRequirement(25)
-                .build();
-        g1u2.setName(Constants.T1_U2_NAME);
-        g1u2.setDescription(Constants.T1_U2_DESCR);
-        g1u2.setBaseCost(Constants.T1_U2_COST);
-
-        Modifier g2u1 = new Modifier.Builder()
-                .modify(g2)
-                .productionMultiplier(1.5)
-                .levelRequirement(10)
-                .build();
-        g2u1.setName(Constants.T2_U1_NAME);
-        g2u1.setDescription(Constants.T2_U1_DESCR);
-        g2u1.setBaseCost(Constants.T2_U1_COST);
-
-        Modifier g2u2 = new Modifier.Builder()
-                .modify(g2)
-                .productionMultiplier(2.0)
-                .levelRequirement(25)
-                .build();
-        g2u2.setName(Constants.T2_U2_NAME);
-        g2u2.setDescription(Constants.T2_U2_DESCR);
-        g2u2.setBaseCost(Constants.T2_U2_COST);
-
-        availableUpgrades.put(g1, List.of(g1u1, g1u2));
-        availableUpgrades.put(g2, List.of(g2u1, g2u2));
-        availableUpgrades.put(g3, List.of());
-        availableUpgrades.put(g4, List.of());
-        availableUpgrades.put(g5, List.of());
-        availableUpgrades.put(g6, List.of());
-        availableUpgrades.put(g7, List.of());
-        availableUpgrades.put(g8, List.of());
-        availableUpgrades.put(g9, List.of());
-        availableUpgrades.put(g10, List.of());
-        availableUpgrades.put(g11, List.of());
-
-
         if (MesoCiv.DEV_MODE) {
             coins.add(BigInteger.valueOf(2000));
         }
 
+        // Generators must be created in order so that indices of world.getGenerators() is in the correct order
+        for (int tier = 1; tier < 11 + 1; tier++) {
+
+            Generator g = new Generator.Builder(world)
+                    .name(Assets.tierName(tier))
+                    .baseCost(Assets.tierBaseCost(tier))
+                    .baseValue(Assets.tierBaseValue(tier))
+                    .costMultiplier(Assets.tierCostMultiplier(tier))
+                    .generate(coins)
+                    .build();
+
+            // Automaton is not used in this game currently as a mechanic, all automators are set to tick
+            // once a second and are level 1. This means each generator always produces its production value
+            // once a second.
+            Automator a = new Automator.Builder(world)
+                    .automate(g)
+                    .tickRate(1.0)
+                    .build();
+
+            a.levelUp(); // Level it up to 1 so it has effect.
+        }
+
+        // Initialize tier upgrades
+        for (int i = 1; i < 11 + 1; i++) {
+            Generator target = world.getGenerators().get(i - 1);
+            availableUpgrades.put(target, new ArrayList<>());
+            List<Assets.Upgrade> tierUpgradeData = Assets.tierUpgrades.get(i);
+            for (Assets.Upgrade upgradeData : tierUpgradeData) {
+                Modifier mod = new Modifier.Builder()
+                        .modify(target)
+                        .productionMultiplier(upgradeData.getProductionMultiplier())
+                        .levelRequirement(upgradeData.getLevelRequirement())
+                        .build();
+                mod.setName(upgradeData.getName());
+                mod.setDescription(upgradeData.getDescription());
+                mod.setBaseCost(upgradeData.getCost());
+                availableUpgrades.get(target).add(mod);
+            }
+        }
     }
 
     public void update(double deltaTime) {

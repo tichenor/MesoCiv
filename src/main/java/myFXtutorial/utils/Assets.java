@@ -3,17 +3,53 @@ package main.java.myFXtutorial.utils;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Assets {
 
     private static final String TIERS_PATH = "tiers.csv";
+    public static final String FONT_PATH = "fonts/CoinageCapsKrugerGray.ttf";
+    public static final String UPGRADES_PATH = "tierUpgrades.csv";
+
     private static final String DELIMITER = ",";
 
     public static Map<Integer, Tier> tiers = new HashMap<>();
+    public static Map<Integer, List<Upgrade>> tierUpgrades = new HashMap<>();
 
     public static void loadAssets() {
+        loadTiers();
+        loadTierUpgrades();
+    }
+
+    private static void loadTierUpgrades() {
+
+        for (int i = 1; i < tiers.keySet().size() + 1; i++) {
+            tierUpgrades.put(i, new ArrayList<>());
+        }
+
+        String line;
+        ClassLoader classLoader = Assets.class.getClassLoader();
+        URL resource = classLoader.getResource(UPGRADES_PATH);
+        if (resource == null)
+            throw new IllegalArgumentException("File cannot be found.");
+        File f = new File(resource.getFile());
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
+            String headerLine = reader.readLine(); // Skip first line
+            while ((line = reader.readLine()) != null) {
+                String[] rowData = line.split(DELIMITER);
+                int tierIndex = Integer.parseInt(rowData[0]);
+                tierUpgrades.get(tierIndex).add(new Upgrade(rowData));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void loadTiers() {
 
         String line;
 
@@ -55,6 +91,56 @@ public class Assets {
         return tiers.get(tier).description;
     }
 
+    public static List<Upgrade> upgradesFor(int tier) {
+        return tierUpgrades.get(tier);
+    }
+
+    public static class Upgrade {
+
+        private final double productionMultiplier;
+        private final int levelRequirement;
+        private final String name;
+        private final BigInteger cost;
+        private final String type;
+        private final String description;
+
+        Upgrade(String[] rowData) {
+            productionMultiplier = Double.parseDouble(rowData[1]);
+            levelRequirement = Integer.parseInt(rowData[2]);
+            name = rowData[3].equals("") ? "Nameless upgrade" : rowData[3];
+            cost = rowData[4].equals("") ? BigInteger.ONE : new BigInteger(rowData[4]);
+            type = rowData[5];
+            description = rowData[6];
+        }
+
+        public double getProductionMultiplier() {
+            return productionMultiplier;
+        }
+
+        public int getLevelRequirement() {
+            return levelRequirement;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public BigInteger getCost() {
+            return cost;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+    }
+
+    /**
+     * Class that is only meant to hold the specific data for a tier/building.
+     */
     static class Tier {
 
         private final String name;
@@ -64,11 +150,11 @@ public class Assets {
         private final String description;
 
         Tier(String[] rowData) {
-            this.name = rowData[1];
-            this.baseCost = new BigInteger(rowData[2]);
-            this.costMultiplier = Double.parseDouble(rowData[3]);
-            this.baseValue = new BigInteger(rowData[4]);
-            this.description = rowData[5];
+            name = rowData[1];
+            baseCost = new BigInteger(rowData[2]);
+            costMultiplier = Double.parseDouble(rowData[3]);
+            baseValue = new BigInteger(rowData[4]);
+            description = rowData[5];
         }
     }
 
