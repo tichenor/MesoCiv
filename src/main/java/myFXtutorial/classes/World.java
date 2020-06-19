@@ -11,14 +11,18 @@ public class World implements Serializable {
     private ArrayList<Automator> automators = new ArrayList<>();
     private ArrayList<Modifier> modifiers = new ArrayList<>();
 
-    private double speedMultiplier = 1.0;
+    /**
+     * Affects the production of all generators in this world by multiplication with this factor.
+     * The value is queried by a generator each time it is calculating its processed amount. It may be changed
+     * by a WorldModifier.
+     */
+    private double globalMultiplier = 1.0;
 
     private boolean updateAutomators = true;
 
     private double elapsedTime = 0;
 
     public void update(double seconds) {
-        seconds *= speedMultiplier;
         if (updateAutomators) {
             for (Automator a : automators) {
                 a.update(seconds);
@@ -113,13 +117,13 @@ public class World implements Serializable {
         return modifiers;
     }
 
-    public double getSpeedMultiplier() {
-        return speedMultiplier;
+    public double getGlobalMultiplier() {
+        return globalMultiplier;
     }
 
-    public void setSpeedMultiplier(double factor) {
+    public void setGlobalMultiplier(double factor) {
         if (factor > 0) {
-            speedMultiplier = factor;
+            globalMultiplier = factor;
         }
     }
 

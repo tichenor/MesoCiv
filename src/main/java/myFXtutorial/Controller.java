@@ -4,13 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 import main.java.myFXtutorial.classes.Modifier;
 import main.java.myFXtutorial.classes.PurchaseResult;
 import main.java.myFXtutorial.utils.Assets;
@@ -235,8 +232,13 @@ public class Controller {
      * @param tier
      */
     private void checkForAvailableUpgrades(int tier) {
-        List<Modifier> t1upgrades = gameManager.getAvailableUpgradesFor(tier);
-        for (Modifier m : t1upgrades) {
+        List<Modifier> tierUpgrades = gameManager.getAvailableUpgradesFor(tier);
+        generateUpgradeButtons(tierUpgrades);
+    }
+
+    private void generateUpgradeButtons(List<Modifier> modifiers) {
+
+        for (Modifier m : modifiers) {
 
             if (upgradeButtonMap.containsValue(m))
                 continue; // Don't want to add more than one button per upgrade

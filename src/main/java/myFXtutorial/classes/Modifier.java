@@ -52,7 +52,7 @@ public abstract class Modifier extends Purchasable implements Serializable {
      */
     static class WorldModifier extends Modifier {
 
-        private double speedMultiplier;
+        private double globalMultiplier;
 
         WorldModifier(World w) {
             super(w);
@@ -61,26 +61,26 @@ public abstract class Modifier extends Purchasable implements Serializable {
         @Override
         protected void onEnable() {
             // Apply the speed modifier to the world.
-            if (speedMultiplier != 1.0) {
-                double speedBefore = getWorld().getSpeedMultiplier();
-                double speedAfter = speedMultiplier *= speedBefore;
-                getWorld().setSpeedMultiplier(speedAfter);
+            if (globalMultiplier != 1.0) {
+                double multiplierBefore = getWorld().getGlobalMultiplier();
+                double multiplierAfter = globalMultiplier *= multiplierBefore;
+                getWorld().setGlobalMultiplier(multiplierAfter);
             }
         }
 
         @Override
         protected void onDisable() {
             // Remove the speed modifier from the world.
-            if (speedMultiplier != 1.0) {
-                double d = getWorld().getSpeedMultiplier();
-                d /= speedMultiplier;
-                getWorld().setSpeedMultiplier(d);
+            if (globalMultiplier != 1.0) {
+                double d = getWorld().getGlobalMultiplier();
+                d /= globalMultiplier;
+                getWorld().setGlobalMultiplier(d);
             }
         }
 
         @Override
         public double getMultiplier() {
-            return speedMultiplier;
+            return globalMultiplier;
         }
 
         @Override
@@ -142,20 +142,20 @@ public abstract class Modifier extends Purchasable implements Serializable {
         public static class WorldTarget {
 
             World world;
-            private double speedMultiplier = 1.0;
+            private double globalMultiplier = 1.0;
 
             WorldTarget(World w) {
                 this.world = w;
             }
 
-            public WorldTarget speedBy(double speedMultiplier) {
-                this.speedMultiplier = speedMultiplier;
+            public WorldTarget multiplier(double globalMultiplier) {
+                this.globalMultiplier = globalMultiplier;
                 return this;
             }
 
             public Modifier build() {
                 WorldModifier wm = new WorldModifier(world);
-                wm.speedMultiplier = speedMultiplier;
+                wm.globalMultiplier = globalMultiplier;
                 return wm;
             }
         }
@@ -165,7 +165,7 @@ public abstract class Modifier extends Purchasable implements Serializable {
          */
         public static class GeneratorTarget {
 
-            private Generator generator;
+            private final Generator generator;
             private double productionMultiplier = 1.0;
             private long levelRequirement = 0;
 

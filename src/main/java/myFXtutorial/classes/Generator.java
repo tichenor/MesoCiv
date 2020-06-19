@@ -35,9 +35,8 @@ public class Generator extends Purchasable implements Serializable {
     private BigInteger baseProduction;
 
     /*
-    The increase in amount generated when a generator is upgraded/leveled up.
-    The base formula is (baseProduction) * (productionMultiplier) ^ (level - 1).
-    This amount is further potentially altered by modifiers.
+    The base amount is multiplied by this factor when processed. May be changed with various
+    modifiers that affect the world.
      */
     private double productionMultiplier;
 
@@ -58,7 +57,7 @@ public class Generator extends Purchasable implements Serializable {
         private Callback onProcessed = null;
         private Currency targetCurrency = null;
         private BigInteger baseProduction = BigInteger.ONE;
-        private double productionMultiplier = 1.1;
+        private double productionMultiplier = 1.0;
         private long maxLevel = Long.MAX_VALUE;
         private BigInteger baseCost = BigInteger.ONE;
         private double costMultiplier = 1.1;
@@ -163,33 +162,17 @@ public class Generator extends Purchasable implements Serializable {
     }
 
     /**
-     * The base amount generated is equal to (baseProduction) * (productionMultiplier) ^ (level - 1).
-     * This value is then possibly further altered by modifiers.
-     *
-     * @return
-     */
-    public BigInteger getGeneratedAmountLevel() {
-
-        if (level == 0) {
-            return BigInteger.ZERO;
-        }
-        BigDecimal temp = new BigDecimal(baseProduction);
-        temp = temp.multiply(BigDecimal.valueOf(Math.pow(productionMultiplier, level - 1)));
-        temp = processModifiers(temp);
-        return temp.toBigInteger();
-    }
-
-    /**
      * The base amount is here equal to (baseProduction) * (level), effectively using the level as a counter of
-     * how many generators of a type is owned instead.
+     * how many generators of a type is owned instead. (Old version removed.)
      * @return
      */
-    public BigInteger getGeneratedAmountCount() {
+    public BigInteger getGeneratedAmount() {
         if (level == 0) {
             return BigInteger.ZERO;
         }
         BigDecimal temp = new BigDecimal(baseProduction.multiply(BigInteger.valueOf(level)));
         temp = processModifiers(temp);
+        temp = temp.multiply(BigDecimal.valueOf(getWorld().getGlobalMultiplier()));
         return temp.toBigInteger();
     }
 
@@ -224,7 +207,7 @@ public class Generator extends Purchasable implements Serializable {
     }
 
     public void process() {
-        targetCurrency.add(getGeneratedAmountCount());
+        targetCurrency.add(getGeneratedAmount());
         timesProcessed++;
         if (callback != null) {
             callback.onProcessed();
