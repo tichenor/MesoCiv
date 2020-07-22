@@ -19,8 +19,16 @@ public class GameManager {
 
     // ALL AUTOMATORS TICK ONCE A SECOND; THIS GAME DOESN'T USE AUTOMATION AS A MECHANIC.
 
+    /**
+     * Dictionary of the generators and the possible modifiers (upgrades) for them.
+     */
     private final Map<Generator, List<Modifier>> generatorUpgrades = new HashMap<>();
-    private final List<Modifier> globalUpgrades = new ArrayList<>();
+
+    /**
+     * Dictionary of global modifiers (global upgrades) and the name of the achievement that unlocks them.
+     * The progress manager handles achievements and properties internally.
+     */
+    private final Map<Modifier, String> globalUpgrades = new HashMap<>();
 
 
     public GameManager() {
@@ -62,7 +70,7 @@ public class GameManager {
                     .tickRate(1.0)
                     .build();
 
-            a.levelUp(); // Level it up to 1 so it has effect.
+            a.levelUp(); // Level it up to 1 so it has effect (starts at 0).
         }
 
         // Initialize tier upgrades
@@ -78,6 +86,7 @@ public class GameManager {
                         .build();
                 mod.setName(upgradeData.getName());
                 mod.setDescription(upgradeData.getDescription());
+                mod.setType(upgradeData.getType());
                 mod.setBaseCost(upgradeData.getCost());
                 generatorUpgrades.get(target).add(mod);
             }
@@ -85,25 +94,52 @@ public class GameManager {
 
         // Initialize global/other upgrades
         for (Assets.GlobalUpgradeData globalUpgradeData : Assets.globalUpgrades) {
+
+            // Generate the global modifier
             Modifier mod = new Modifier.Builder()
                     .modify(world)
                     .multiplier(globalUpgradeData.getMultiplier())
                     .build();
             mod.setName(globalUpgradeData.getName());
             mod.setDescription(globalUpgradeData.getDescription());
+            mod.setType(globalUpgradeData.getType());
             mod.setBaseCost(globalUpgradeData.getCost());
-            globalUpgrades.add(mod);
+
+            // Create the property and achievement corresponding to the unlock requirement for the global upgrade
+
+            // Tag name is of the form "totalBuildings", "totalClicks", etc. Property will have only this tag.
+            String propertyTag = globalUpgradeData.getUnlockRequirement();
+            // Property name is <tag><integer unlock value>, e.g. "totalBuildings50".
+            String propertyName = globalUpgradeData.getUnlockRequirement() + globalUpgradeData.getUnlockValue();
+            progressManager.defineProperty(propertyName,
+                    0,
+                    ProgressManager.ActivationRule.GREATER_THAN,
+                    globalUpgradeData.getUnlockValue(),
+                    Collections.singletonList(globalUpgradeData.getUnlockRequirement()));
+            String achievementName = mod.getName() + " unlock";
+            // The achievement consists of just the one property corresponding to the unlock requirement of the upgrade
+            progressManager.defineAchievement(achievementName, Collections.singletonList(propertyName));
+
+            globalUpgrades.put(mod, achievementName);
 
         }
 
-        // Initialize progress manager: properties and achievements
+        // Initialize progress manager: properties and achievements (TESTING)
         progressManager.defineProperty("totalBuildings10",
                 0,
                 ProgressManager.ActivationRule.GREATER_THAN,
                 10,
-                new ArrayList<>());
+                Collections.singletonList("totalBuildings"));
+        progressManager.defineProperty("totalBuildings25",
+                0,
+                ProgressManager.ActivationRule.GREATER_THAN,
+                25,
+                Collections.singletonList("totalBuildings"));
+
         progressManager.defineAchievement("Building apprentice",
                 Collections.singletonList("totalBuildings10"));
+        progressManager.defineAchievement("Building novice",
+                Collections.singletonList("totalBuildings25"));
     }
 
     public void update(double deltaTime) {
@@ -112,8 +148,11 @@ public class GameManager {
         for (ProgressManager.Achievement a : unlockedAchievements) {
             achievementStack.push(a);
         }
-        while (!achievementStack.empty())
-            System.out.println("Unlocked " + achievementStack.pop().getName() + "!");
+        while (!achievementStack.empty()) {
+            ProgressManager.Achievement a = achievementStack.pop();
+            System.out.println("Achievement: " + a.getName() + "!");
+        }
+
     }
 
     public void increment(int n) {
@@ -189,6 +228,19 @@ public class GameManager {
         return result;
     }
 
+    /**
+     * Return a list of all global upgrades whose 'unlocking achievement' has been unlocked.
+     */
+    public List<Modifier> getAvailableGlobalUpgrades() {
+        List<Modifier> result = new ArrayList<>();
+        for (Map.Entry<Modifier, String> entry : globalUpgrades.entrySet()) {
+            if (progressManager.isUnlocked(entry.getValue())) {
+                result.add(entry.getKey());
+            }
+        }
+        return result;
+    }
+
     public String getNameOf(int tier) {
         return world.getGenerators().get(tier - 1).getName();
     }
@@ -205,7 +257,7 @@ public class GameManager {
             if (g != null) {
                 PurchaseResult result = g.purchaseWith(coins);
                 if (result == PurchaseResult.OK) {
-                    progressManager.addValue("totalBuildings10", 1);
+                    progressManager.addValueTagged(Collections.singletonList("totalBuildings"), 1);
                     return result;
                 }
             }

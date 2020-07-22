@@ -1,4 +1,4 @@
-- (PARTIAL) read in game data from external file (e.g. JSON) instead of having a static Constants class
+- (DONE) read in game data from external file (e.g. JSON) instead of having a static Constants class
     - made an Assets class that reads from a .csv file to load building (tier) data, remains to extend this to upgrades and upgrade requirements
 
 - (DONE) make tooltips for "tier" buttons work the same as for "upgrade" buttons for coherence
@@ -9,8 +9,15 @@
 
 - find some better way to access/store generators than to have them appended to an array world.generators in order
 
-- fix upgrade appearing multiple times if leveling past level requirement without purchasing upgrade
+-  (DONE) fix upgrade appearing multiple times if leveling past level requirement without purchasing upgrade
 
-- work on a cleaner solution to loading and initializing tiers and tier upgrades (Assets and GameManager)
+- (PARTIAL) work on a cleaner solution to loading and initializing tiers and tier upgrades (Assets and GameManager)
+    - done, but there might be cleaner solutions
 
-- change the delimiter in .csv files to not be a comma so that descriptions can use it without having to create a workaround
+- (DONE) change the delimiter in .csv files to not be a comma so that descriptions can use it without having to create a workaround
+
+- (PARTIAL) tidy up the Progress Manager, make it work nicely with property tags, and make properties & achievements load in
+    from .csv files.
+    - Progress Manager can update properties based on tags, but tag system can be extended. Global upgrades are generated
+        with their corresponding "unlocking achievement" from .csv. An upgrade becomes available when the achievement
+        is unlocked in the Progress Manager.

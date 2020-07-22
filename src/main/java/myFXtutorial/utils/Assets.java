@@ -16,8 +16,19 @@ public class Assets {
 
     private static final String DELIMITER = ";";
 
+    /**
+     * Dictionary of data corresponding to a particular integer tier.
+     */
     public static Map<Integer, TierData> tiers = new HashMap<>();
+
+    /**
+     * Upgrades for a specific building/tier.
+     */
     public static Map<Integer, List<TierUpgradeData>> tierUpgrades = new HashMap<>();
+
+    /**
+     * Upgrades that affect all buildings/tiers or other global parameters.
+     */
     public static List<GlobalUpgradeData> globalUpgrades = new ArrayList<>();
 
     public static void loadAssets() {
@@ -125,37 +136,35 @@ public class Assets {
         private final double multiplier;
         private final String unlockRequirement;
         private final int unlockValue;
+        private final String type;
         private final String description;
 
         public GlobalUpgradeData(String[] rowData) {
-            name = rowData[0].equals("") ? "Nameless upgrade" : rowData[1];
+            name = rowData[0].equals("") ? "Nameless upgrade" : rowData[0];
             cost = rowData[1].equals("") ? BigInteger.ONE : new BigInteger(rowData[1]);
             multiplier = rowData[2].equals("") ? 1.0 : Double.parseDouble(rowData[2]);
             unlockRequirement = rowData[3].equals("") ? "none" : rowData[3];
             unlockValue = rowData[4].equals("") ? 0 : Integer.parseInt(rowData[4]);
-            description = rowData[5].equals("") ? "No description" : rowData[5];
+            type = rowData[5].equals("") ? "general" : rowData[5];
+            description = rowData[6].equals("") ? "No description" : rowData[6];
         }
 
         public String getName() {
             return name;
         }
-
         public BigInteger getCost() {
             return cost;
         }
-
         public double getMultiplier() {
             return multiplier;
         }
-
         public String getUnlockRequirement() {
             return unlockRequirement;
         }
-
         public int getUnlockValue() {
             return unlockValue;
         }
-
+        public String getType() { return type; }
         public String getDescription() {
             return description;
         }

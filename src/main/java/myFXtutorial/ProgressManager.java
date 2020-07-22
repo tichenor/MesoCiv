@@ -66,6 +66,14 @@ public class ProgressManager {
         setValue(propertyName, getValueOf(propertyName) + value);
     }
 
+    public void addValueTagged(List<String> tags, int value) {
+        for (Property p : properties.values()) {
+            if (hasTag(p, tags)) {
+                setValue(p.name, getValueOf(p.name) + value);
+            }
+        }
+    }
+
     public void addValues(List<Property> propertyList, int value) {
         for (Property p : propertyList) {
             addValue(p.name, value);
@@ -74,7 +82,7 @@ public class ProgressManager {
 
     public void setValue(String propertyName, int value) {
         // Constrain the value so that a property records the highest/lowest value obtained. Otherwise
-        // achievements might be missed by recording a value, then another lower/higer value before a check
+        // achievements might be missed by recording a value, then another lower/higher value before a check
         // whether the achievement should be unlocked was made.
         switch (properties.get(propertyName).activationRule) {
             case GREATER_THAN -> value = Math.max(value, properties.get(propertyName).value);
@@ -100,6 +108,10 @@ public class ProgressManager {
         for (Property p : properties.values()) {
             p.reset();
         }
+    }
+
+    public boolean isUnlocked(String achievementName) {
+        return achievements.get(achievementName).unlocked;
     }
 
     private void checkPropertyExists(String propertyName) {

@@ -13,6 +13,11 @@ public abstract class Modifier extends Purchasable implements Serializable {
     private boolean enabled = false;
     private long levelRequirement = 0;
 
+    /**
+     * Semantic string description of a modifier's type (is it a new technology, a scientific development, etc.?)
+     */
+    private String type = "no type";
+
     private Modifier(World world) {
         super(world);
     }
@@ -44,6 +49,14 @@ public abstract class Modifier extends Purchasable implements Serializable {
 
     public Generator getTarget() {
         return null;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 
     /**

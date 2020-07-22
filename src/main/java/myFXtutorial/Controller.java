@@ -204,7 +204,7 @@ public class Controller {
         }
         if (result == PurchaseResult.OK) {
             updateAll();
-            checkForAvailableUpgrades(tierMap.get(source));
+            checkForAvailableTierUpgrades(tierMap.get(source));
         }
     }
 
@@ -231,9 +231,14 @@ public class Controller {
      * Dynamically generate upgrade buttons whenever an upgrade becomes available.
      * @param tier
      */
-    private void checkForAvailableUpgrades(int tier) {
+    private void checkForAvailableTierUpgrades(int tier) {
         List<Modifier> tierUpgrades = gameManager.getAvailableUpgradesFor(tier);
         generateUpgradeButtons(tierUpgrades);
+    }
+
+    private void checkForAvailableGlobalUpgrades() {
+        List<Modifier> globalUpgrades = gameManager.getAvailableGlobalUpgrades();
+        generateUpgradeButtons(globalUpgrades);
     }
 
     private void generateUpgradeButtons(List<Modifier> modifiers) {
@@ -296,7 +301,11 @@ public class Controller {
                 if (source != null) {
                     Modifier upgrade = upgradeButtonMap.get(source);
                     if (upgrade != null) {
-                        tooltipTitle.setText(upgrade.getName() + "\n(" + upgrade.getTarget().getName() + " technology)");
+                        if (upgrade.getTarget() != null) { // Upgrade is targeting a particular generator (building)
+                            tooltipTitle.setText(upgrade.getName() + "\n(" + upgrade.getTarget().getName() + " technology)");
+                        } else { // Upgrade is "global" or other
+                            tooltipTitle.setText(upgrade.getName() + "\n(" + upgrade.getType() + ")");
+                        }
                         tooltipDescription.setText(upgrade.getDescription());
                         tooltipEffect.setText("Production bonus: x" + upgradeNumFormatter.format(upgrade.getMultiplier()));
                         tooltipCost.setText("Cost: " + numFormatter.format(upgrade.getBaseCost()));
@@ -375,6 +384,8 @@ public class Controller {
         t11ProductionLabel.setText(productionLabel(11));
         t11CountLabel.setText(countLabel(11));
         t11CostLabel.setText(costLabel(11));
+
+        checkForAvailableGlobalUpgrades();
 
     }
 
