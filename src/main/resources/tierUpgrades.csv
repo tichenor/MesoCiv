@@ -1,0 +1,66 @@
+tier;productionMultiplier;levelRequirement;name;cost;type;description;unused
+1;2;10;Open courtyards;250;technology;Provides a cooling effect by creating convection currents.;0
+1;3;25;;1000;technology;;0
+1;4;50;;15000;technology;;0
+1;5;75;;250000;technology;;0
+1;6;100;;5000000;technology;;0
+2;2;10;Irrigation network;2000;technology;Support the production of additional crops that doesn't rely on rainfall.;0
+2;2.5;25;Aqueducts;10000;technology;Open up the possibility of farming in more challenging terrain.;0
+2;3;50;Water-lifting wheels;125000;technology;Improve the efficiency and reach of irrigation.;0
+2;4;75;Field plans;2000000;technology;Divide land systematically, plan the construction of canals, and estimate crop returns.;0
+2;5;100;Storage;9000000;technology;Cisterns, granaries, barns and silos to store water and harvested crops.;0
+2;6;150;Threshing floors;2500000000;technology;Allow for efficient threshing of crops.;0
+2;7;200;Crop rotation;750000000000;technology;Growing different kinds of crops in the same area in sequenced seasons reduces soil erosion. This increases fertility and safety of crops and results in a greater yield.;0
+2;8;250;Windbreaks;750000000000;technology;Lines of trees or large bushes around cultivated areas protect smaller plants from wind erosion and excessive sunlight.;0
+2;9;300;Soil convservation;750000000000;technology;Leach the soil to control salinity. Leave fields occasionally fallow. Sustainability leads to a greater long term yield.;0
+3;2;10;Potter's wheels;10000;technology;Achieve unprecedented rotational symmetry.;0
+3;2;25;;50000;technology;;0
+3;2.5;50;;650000;technology;;0
+3;2.5;75;;10000000;technology;;0
+3;3;100;;42500000;technology;;0
+4;2;10;;60000;technology;;0
+4;2;25;;300000;technology;;0
+4;2.5;50;;3750000;technology;;0
+4;2.5;75;;60000000;technology;;0
+4;3;100;;250000000;technology;;0
+5;2;10;;200000;technology;;0
+5;2;25;;1000000;technology;;0
+5;2.5;50;;12500000;technology;;0
+5;2.5;75;;200000000;technology;;0
+5;2.5;100;;800000000;technology;;0
+6;2;10;;400000;technology;;0
+6;2;25;;4000000;technology;;0
+6;2.5;50;;50000000;technology;;0
+6;3;75;;800000000;technology;;0
+6;3.5;100;;3200000000;technology;;0
+7;2;10;;2000000;technology;;0
+7;2.5;25;;20000000;technology;;0
+7;3;50;;250000000;technology;;0
+7;3.5;75;;4000000000;technology;;0
+7;4;100;;16000000000;technology;;0
+8;2;10;Mathematics: Arithmetic;16000000;technology;Efficient computation of squares, reciprocals, etc. using pre-calculated clay tablets. ;0
+8;3;25;Astronomy: Planets;160000000;technology;;0
+8;4;50;Medicine: Physical examination;2000000000;technology;;0
+8;5;75;Mathematics: Algebra;32000000000;technology;Find dimensions of e.g. rectangles by solving quadratic equations.;0
+8;6;100;Astronomy: Cosmology;105000000000;technology;;0
+8;7;150;Medicine: Prognosis;;technology;;0
+8;8;200;Mathematics: Geometry;;technology;;0
+8;9;250;Medicine: Diagnosis;;technology;;0
+8;10;300;Astronomy: Other celestial bodies;;technology;;0
+8;10;350;Mathematics: Geometry;;technology;Measure volumes, areas and relations of geometric shapes.;0
+8;10;400;Medicine: Prescriptions;;technology;;0
+9;10;10;;;technology;;0
+9;10;25;;;technology;;0
+9;10;50;;;technology;;0
+9;10;75;;;technology;;0
+9;10;100;;;technology;;0
+10;2;10;;;technology;;0
+10;3;25;;;technology;;0
+10;4;50;;;technology;;0
+10;5;75;;;technology;;0
+10;6;100;;;technology;;0
+11;5;10;;;technology;;0
+11;5;25;;;technology;;0
+11;5;50;;;technology;;0
+11;5;75;;;technology;;0
+11;5;100;;;technology;;0

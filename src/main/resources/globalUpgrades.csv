@@ -1,0 +1,5 @@
+name;cost;multiplier;unlockRequirement;unlockValue;type;description;unused
+Mudbrick;100000;1.1;totalBuildings;50;material;A discovery of a new material. Affects all buildings and facilities.;0
+Granite;1000000;1.15;totalBuildings;100;material;A discovery of a new material. Affects all buildings and facilities.;0
+Limestone;10000000;1.15;totalBuildings;150;material;A discovery of a new material. Affects all buildings and facilities.;0
+Marble;100000000;1.2;totalBuildings;200;material;A discovery of a new material. Affects all buildings and facilities.;0
