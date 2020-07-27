@@ -1,0 +1,13 @@
+name;type;unlockRequirement;unlockValue;description;bonusValue;unused
+Clickprentice;bonusClick;clicking;10;Click the background 10 times.;1;0
+Clickolyte;bonusClick;clicking;50;Click the background 50 times.;5;0
+Seasoned clicker;bonusClick;clicking;250;Click the background 250 times.;10;0
+Clicklightened;bonusClick;clicking;750;Click the background 750 times.;25;0
+Master clicker;bonusClick;clicking;1500;Click the background 1500 times.;125;0
+Income apprentice;bonusGlobalMultiplier;perSecond;100;Have an income of at least 100 coins per second.;1.02;0
+Income student;bonusGlobalMultiplier;perSecond;1000;Have an income of at least 1K coins per second.;1.02;0
+Income scholar;bonusGlobalMultiplier;perSecond;10000;Have an income of at least 10K coins per second.;1.03;0
+Incomediate;bonusGlobalMultiplier;perSecond;100000;Have an income of at least 100K coins per second.;1.03;0
+Acquirer of currency;bonusGlobalMultiplier;perSecond;1000000;Have an income of at least 1M coins per second.;1.03;0
+Coinician;bonusGlobalMultiplier;perSecond;10000000;Have an income of at least 10M coins per second.;1.04;0
+Term coiner;bonusGlobalMultiplier;perSecond;50000000;Have an income of at least 50M coins per second.;1.05;0

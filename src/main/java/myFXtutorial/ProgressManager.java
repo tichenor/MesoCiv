@@ -74,6 +74,14 @@ public class ProgressManager {
         }
     }
 
+    public void setValueTagged(List<String> tags, int value) {
+        for (Property p : properties.values()) {
+            if (hasTag(p, tags)) {
+                setValue(p.name, value);
+            }
+        }
+    }
+
     public void addValues(List<Property> propertyList, int value) {
         for (Property p : propertyList) {
             addValue(p.name, value);
@@ -196,13 +204,11 @@ public class ProgressManager {
         }
 
         boolean isActive() {
-            boolean result = false;
-            switch (activationRule) {
-                case GREATER_THAN: result = value > activationValue;
-                case LESS_THAN: result = value < activationValue;
-                case EQUAL_TO: result = value == activationValue;
-            }
-            return result;
+            return switch (activationRule) {
+                case GREATER_THAN -> value > activationValue;
+                case LESS_THAN -> value < activationValue;
+                case EQUAL_TO -> value == activationValue;
+            };
         }
     }
 

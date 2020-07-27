@@ -382,19 +382,6 @@
                     </children>
                 </GridPane>
             </top>
-            <bottom>
-                <GridPane BorderPane.alignment="CENTER">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                </GridPane>
-            </bottom>
             <center>
                 <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#increment" prefHeight="200.0" prefWidth="200.0" styleClass="background" stylesheets="@main/resources/app.css" BorderPane.alignment="CENTER">
                <children>
@@ -405,10 +392,45 @@
                         <Label fx:id="tooltipEffect" styleClass="tooltip-effect-label" text="Label" />
                         <Label fx:id="tooltipCost" styleClass="tooltip-cost-label" text="Label" />
                      </children></VBox>
+                  <VBox fx:id="radioBoxContainer" alignment="TOP_RIGHT" layoutX="10.0" layoutY="580.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="310.0" prefWidth="595.0" rotate="180.0" />
                </children></Pane>
             </center>
+         <bottom>
+            <GridPane BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+         </bottom>
          <left>
-            <TilePane fx:id="upgradePanel" prefHeight="900.0" prefTileHeight="79.0" prefTileWidth="117.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+            <TabPane prefHeight="900.0" prefWidth="577.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+              <tabs>
+                <Tab text="Upgrades">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TilePane fx:id="upgradePanel" prefHeight="872.0" prefTileHeight="79.0" prefTileWidth="117.0" prefWidth="575.0" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="Achievements">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TilePane fx:id="achievementsPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefColumns="8" prefRows="12" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
          </left>
         </BorderPane>
     </children>

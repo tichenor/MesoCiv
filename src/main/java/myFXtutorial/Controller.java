@@ -1,15 +1,19 @@
 package main.java.myFXtutorial;
 
+import javafx.animation.SequentialTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import main.java.myFXtutorial.classes.Modifier;
 import main.java.myFXtutorial.classes.PurchaseResult;
+import main.java.myFXtutorial.gui.RadioBox;
 import main.java.myFXtutorial.utils.Assets;
 import main.java.myFXtutorial.utils.Constants;
 import main.java.myFXtutorial.utils.NumFormatter;
@@ -39,14 +43,33 @@ public class Controller {
      * This field allows lookup of the integer representing the tier of a building/structure corresponding to a button.
      */
     private Map<Button, Integer> tierMap;
+
     /**
      * For looking up what upgrade a button represents.
      */
     private Map<Button, Modifier> upgradeButtonMap;
 
+    /**
+     * For looking up what achievement (using its name) an image represents. Images represent unlocked achievements
+     * under the 'Achievements' tab.
+     */
+    private Map<ImageView, String> achievementIconMap;
+
+    /**
+     * Displays various information and notifications to the user.
+     */
+    private RadioBox radioBox;
+
+    /**
+     * Labels for displaying number of coins owned and estimated production of coins per second.
+     */
     @FXML private Label coinsLabel;
     @FXML private Label perSecondLabel;
 
+    /**
+     * Container for displaying various tooltip information such as name, cost and effect of an upgrade when hovering
+     * over it.
+     */
     @FXML private VBox tooltipBox;
     // Labels for displaying tooltip information
     @FXML private Label tooltipTitle;
@@ -54,8 +77,23 @@ public class Controller {
     @FXML private Label tooltipEffect;
     @FXML private Label tooltipCost;
 
+    /**
+     * Container for displaying purchasable upgrades as they become available.
+     */
     @FXML private TilePane upgradePanel;
 
+    @FXML private TilePane achievementsPanel;
+
+    /**
+     * Container for displaying various text information about the game and game events, such as unlocking a new
+     * achievement, reaching a milestone or fluff. This container is wrapped in the RadioBox class for customized
+     * control.
+     */
+    @FXML private VBox radioBoxContainer;
+
+    /**
+     * Buttons for purchasing/leveling up buildings/structures/tiers.
+     */
     @FXML private Button t1Button;
     @FXML private Button t2Button;
     @FXML private Button t4Button;
@@ -68,6 +106,9 @@ public class Controller {
     @FXML private Button t10Button;
     @FXML private Button t11Button;
 
+    /**
+     * Labels for displaying cost, number owned/level, and production per second of buildings/tiers.
+     */
     @FXML private Label t1CostLabel;
     @FXML private Label t1CountLabel;
     @FXML private Label t1ProductionLabel;
@@ -112,6 +153,9 @@ public class Controller {
     @FXML private Label t11CountLabel;
     @FXML private Label t11ProductionLabel;
 
+    /**
+     * Formatters for displaying numbers properly, such as cost, production per second, and so on.
+     */
     private NumFormatter numFormatter;
     private DecimalFormat upgradeNumFormatter;
 
@@ -157,6 +201,8 @@ public class Controller {
         tierMap.put(t11Button, 11);
 
         upgradeButtonMap = new HashMap<>();
+        achievementIconMap = new HashMap<>();
+        radioBox = new RadioBox(radioBoxContainer);
 
     }
 
@@ -185,7 +231,7 @@ public class Controller {
 
     @FXML
     private void increment() {
-        gameManager.increment(1);
+        gameManager.onClick();
         updateAll();
     }
 
@@ -206,6 +252,17 @@ public class Controller {
             updateAll();
             checkForAvailableTierUpgrades(tierMap.get(source));
         }
+    }
+
+    /**
+     * Display a temporary message to the user.
+     * @param msg A string message.
+     */
+    public void transmitMessage(String msg) {
+        Label label = new Label(msg);
+        label.setStyle("-fx-text-fill: black; -fx-padding: 10px;");
+        SequentialTransition sequence = radioBox.createTransition(label, 5, 5, 1, 0);
+        radioBox.submit(label, sequence);
     }
 
     /**
@@ -263,6 +320,7 @@ public class Controller {
 
             // Track which upgrade (modifier) a button represents
             upgradeButtonMap.put(upgButton, m);
+            transmitMessage(m.getName() + " is now available.");
         }
     }
 
@@ -293,23 +351,20 @@ public class Controller {
      * @return
      */
     private EventHandler<MouseEvent> upgButtonMouseEntered() {
-        return new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                Button source = null;
-                source = (Button) mouseEvent.getSource();
-                if (source != null) {
-                    Modifier upgrade = upgradeButtonMap.get(source);
-                    if (upgrade != null) {
-                        if (upgrade.getTarget() != null) { // Upgrade is targeting a particular generator (building)
-                            tooltipTitle.setText(upgrade.getName() + "\n(" + upgrade.getTarget().getName() + " technology)");
-                        } else { // Upgrade is "global" or other
-                            tooltipTitle.setText(upgrade.getName() + "\n(" + upgrade.getType() + ")");
-                        }
-                        tooltipDescription.setText(upgrade.getDescription());
-                        tooltipEffect.setText("Production bonus: x" + upgradeNumFormatter.format(upgrade.getMultiplier()));
-                        tooltipCost.setText("Cost: " + numFormatter.format(upgrade.getBaseCost()));
+        return mouseEvent -> {
+            Button source;
+            source = (Button) mouseEvent.getSource();
+            if (source != null) {
+                Modifier upgrade = upgradeButtonMap.get(source);
+                if (upgrade != null) {
+                    if (upgrade.getTarget() != null) { // Upgrade is targeting a particular generator (building)
+                        tooltipTitle.setText(upgrade.getName() + "\n(" + upgrade.getTarget().getName() + " technology)");
+                    } else { // Upgrade is "global" or other
+                        tooltipTitle.setText(upgrade.getName() + "\n(" + upgrade.getType() + ")");
                     }
+                    tooltipDescription.setText(upgrade.getDescription());
+                    tooltipEffect.setText("Production bonus: x" + upgradeNumFormatter.format(upgrade.getMultiplier()));
+                    tooltipCost.setText("Cost: " + numFormatter.format(upgrade.getBaseCost()));
                 }
             }
         };
@@ -320,13 +375,41 @@ public class Controller {
      * @return
      */
     private EventHandler<MouseEvent> upgButtonMouseExited() {
-        return new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                clearTooltip();
+        return mouseEvent -> clearTooltip();
+    }
 
+    private EventHandler<MouseEvent> achievementIconMouseEntered() {
+        return mouseEvent -> {
+            ImageView source;
+            source = (ImageView) mouseEvent.getSource();
+            if (source != null) {
+                String achievementName = achievementIconMap.get(source);
+                if (achievementName != null) {
+                    tooltipTitle.setText(achievementName);
+                    Assets.AchievementData ad = Assets.achievements.get(achievementName);
+                    if (ad != null) {
+                        tooltipDescription.setText(ad.getDescription());
+                        tooltipEffect.setText(getAchievementEffect(ad));
+                    }
+                }
             }
         };
+    }
+
+    private EventHandler<MouseEvent> achievementIconMouseExited() {
+        return mouseEvent -> clearTooltip();
+    }
+
+    private String getAchievementEffect(Assets.AchievementData ad) {
+        String effect;
+        switch (ad.getType()) {
+            case "bonusClick" ->
+                    effect = "(+" + ad.getBonusValue() + " coin(s) per click).";
+            case "bonusGlobalMultiplier" ->
+                    effect = "(x" + upgradeNumFormatter.format(ad.getBonusValue()) + " to all production).";
+            default -> effect = "No effect.";
+        }
+        return effect;
     }
 
     private void clearTooltip() {
@@ -387,6 +470,25 @@ public class Controller {
 
         checkForAvailableGlobalUpgrades();
 
+        List<ProgressManager.Achievement> unlockedAchievements = gameManager.getUnlockedAchievements();
+        for (ProgressManager.Achievement a : unlockedAchievements) {
+            onUnlockedAchievement(a);
+        }
+
+    }
+
+    private void onUnlockedAchievement(ProgressManager.Achievement a) {
+        String message = "New achievement: " + a.getName();
+        Assets.AchievementData ad = Assets.achievements.get(a.getName());
+        transmitMessage(message);
+        ImageView iv = new ImageView();
+        iv.setImage(Assets.test);
+        iv.setFitWidth(100);
+        iv.setFitHeight(80);
+        iv.setOnMouseEntered(achievementIconMouseEntered());
+        iv.setOnMouseExited(achievementIconMouseExited());
+        achievementIconMap.put(iv, a.getName());
+        achievementsPanel.getChildren().add(iv);
     }
 
     private String productionLabel(int tier) {

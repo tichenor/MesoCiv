@@ -1,6 +1,9 @@
 package main.java.myFXtutorial.utils;
 
+import javafx.scene.image.Image;
+
 import java.io.*;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ public class Assets {
     private static final String TIERS_PATH = "tiers.csv";
     public static final String TIER_UPGRADES_PATH = "tierUpgrades.csv";
     public static final String GLOBAL_UPGRADES_PATH = "globalUpgrades.csv";
+    public static final String ACHIEVEMENTS_PATH = "achievements.csv";
 
     private static final String DELIMITER = ";";
 
@@ -31,10 +35,46 @@ public class Assets {
      */
     public static List<GlobalUpgradeData> globalUpgrades = new ArrayList<>();
 
+    /**
+     * Achievements that may unlock bonuses upon reaching a goal.
+     */
+    public static Map<String, AchievementData> achievements = new HashMap<>();
+
+    public static Image test;
+    
     public static void loadAssets() {
         loadTiers();
         loadTierUpgrades();
         loadGlobalUpgrades();
+        loadAchievements();
+        loadImages();
+    }
+
+    private static void loadImages() {
+        URL resource = Assets.class.getClassLoader().getResource("textures/imgpaneltest.png");
+        assert resource != null;
+        test = new Image(resource.toExternalForm());
+    }
+
+    private static void loadAchievements() {
+
+        String line;
+        ClassLoader classLoader = Assets.class.getClassLoader();
+        URL resource = classLoader.getResource(ACHIEVEMENTS_PATH);
+        if (resource == null)
+            throw new IllegalArgumentException("File cannot be found.");
+        File f = new File(resource.getFile());
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
+            String headerLine = reader.readLine(); // Skip first line
+            while ((line = reader.readLine()) != null) {
+                String[] rowData = line.split(DELIMITER);
+                AchievementData ad = new AchievementData(rowData);
+                achievements.put(ad.name, ad);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void loadGlobalUpgrades() {
@@ -210,6 +250,50 @@ public class Assets {
 
         public String getDescription() {
             return description;
+        }
+    }
+
+    public static class AchievementData {
+
+        private final String name;
+        private final String type;
+        private final String unlockRequirement;
+        private final int unlockValue;
+        private final String description;
+        private final double bonusValue;
+
+        AchievementData(String[] rowData) {
+            int i = 0;
+            name = rowData[i].equals("") ? "Nameless achievement" : rowData[i]; i++;
+            type = rowData[i].equals("") ? "no type" : rowData[i]; i++;
+            unlockRequirement = rowData[i].equals("") ? "undefined" : rowData[i]; i++;
+            unlockValue = rowData[i].equals("") ? 1 : Integer.parseInt(rowData[i]); i++;
+            description = rowData[i].equals("") ? "no description" : rowData[i]; i++;
+            bonusValue = rowData[i].equals("") ? 0 : Double.parseDouble(rowData[i]);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getUnlockRequirement() {
+            return unlockRequirement;
+        }
+
+        public int getUnlockValue() {
+            return unlockValue;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public double getBonusValue() {
+            return bonusValue;
         }
     }
 

@@ -3,6 +3,9 @@
 
 - (DONE) make tooltips for "tier" buttons work the same as for "upgrade" buttons for coherence
 
+- (DONE) implemented a "radio box" that displays various information and notifications to the user, such as new upgrades
+    becoming available, achievements unlocking, etc.
+
 - save/load...
 
 - gradle/maven?
@@ -21,3 +24,9 @@
     - Progress Manager can update properties based on tags, but tag system can be extended. Global upgrades are generated
         with their corresponding "unlocking achievement" from .csv. An upgrade becomes available when the achievement
         is unlocked in the Progress Manager.
+
+- prestige system
+
+- make tier labels correctly take into account global multipliers for the production increase per tier purchased
+
+- more currency systems...

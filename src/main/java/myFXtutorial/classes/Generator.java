@@ -184,6 +184,7 @@ public class Generator extends Purchasable implements Serializable {
     public BigInteger getGeneratedAmountPerLevel() {
         BigDecimal temp = new BigDecimal(baseProduction);
         temp = processModifiers(temp);
+        temp = temp.multiply(BigDecimal.valueOf(getWorld().getGlobalMultiplier()));
         return temp.toBigInteger();
     }
 

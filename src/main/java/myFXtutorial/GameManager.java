@@ -13,6 +13,8 @@ public class GameManager {
 
     private Currency coins;
 
+    private int clickValue = 1;
+
     private final ProgressManager progressManager;
 
     private Stack<ProgressManager.Achievement> achievementStack;
@@ -115,7 +117,7 @@ public class GameManager {
                     0,
                     ProgressManager.ActivationRule.GREATER_THAN,
                     globalUpgradeData.getUnlockValue(),
-                    Collections.singletonList(globalUpgradeData.getUnlockRequirement()));
+                    Collections.singletonList(propertyTag));
             String achievementName = mod.getName() + " unlock";
             // The achievement consists of just the one property corresponding to the unlock requirement of the upgrade
             progressManager.defineAchievement(achievementName, Collections.singletonList(propertyName));
@@ -124,39 +126,60 @@ public class GameManager {
 
         }
 
-        // Initialize progress manager: properties and achievements (TESTING)
-        progressManager.defineProperty("totalBuildings10",
-                0,
-                ProgressManager.ActivationRule.GREATER_THAN,
-                10,
-                Collections.singletonList("totalBuildings"));
-        progressManager.defineProperty("totalBuildings25",
-                0,
-                ProgressManager.ActivationRule.GREATER_THAN,
-                25,
-                Collections.singletonList("totalBuildings"));
-
-        progressManager.defineAchievement("Building apprentice",
-                Collections.singletonList("totalBuildings10"));
-        progressManager.defineAchievement("Building novice",
-                Collections.singletonList("totalBuildings25"));
+        // Initialize achievements
+        for (Assets.AchievementData achievementData : Assets.achievements.values()) {
+            // Currently only single-property achievements
+            String propertyName = achievementData.getUnlockRequirement() + achievementData.getUnlockValue();
+            String propertyTag = achievementData.getUnlockRequirement();
+            progressManager.defineProperty(propertyName,
+                    0,
+                    ProgressManager.ActivationRule.GREATER_THAN,
+                    achievementData.getUnlockValue(),
+                    Collections.singletonList(propertyTag));
+            String achievementName = achievementData.getName();
+            progressManager.defineAchievement(achievementName, Collections.singletonList(propertyName));
+        }
     }
 
+    double seconds = 0;
+
+    /**
+     * Updates and progresses the world by a time step. Checks if any new achievements have been unlocked.
+     * @param deltaTime Time in milliseconds.
+     */
     public void update(double deltaTime) {
+        seconds += deltaTime;
+        while (seconds > 1) {
+            seconds -= 1;
+            progressManager.setValueTagged(Collections.singletonList("perSecond"), getPerSecond().intValue());
+        }
         world.update(deltaTime);
         List<ProgressManager.Achievement> unlockedAchievements = progressManager.checkAllAchievements();
         for (ProgressManager.Achievement a : unlockedAchievements) {
             achievementStack.push(a);
+            onUnlock(a);
         }
-        while (!achievementStack.empty()) {
-            ProgressManager.Achievement a = achievementStack.pop();
-            System.out.println("Achievement: " + a.getName() + "!");
-        }
-
     }
 
-    public void increment(int n) {
-        coins.add(BigInteger.valueOf(n));
+    private void onUnlock(ProgressManager.Achievement a) {
+        Assets.AchievementData ad = Assets.achievements.get(a.getName());
+        switch (ad.getType()) {
+            case "bonusClick" -> clickValue += (int) ad.getBonusValue();
+            case "bonusGlobalMultiplier" -> {
+                Modifier m = new Modifier.Builder()
+                        .modify(world)
+                        .multiplier(ad.getBonusValue())
+                        .build();
+                m.setName(ad.getName() + " bonus");
+                m.enable();
+            }
+            default -> {}
+        }
+    }
+
+    public void onClick() {
+        coins.add(BigInteger.valueOf(clickValue));
+        progressManager.addValueTagged(Collections.singletonList("clicking"), 1);
     }
 
     public BigInteger getCoins() {
@@ -243,6 +266,14 @@ public class GameManager {
 
     public String getNameOf(int tier) {
         return world.getGenerators().get(tier - 1).getName();
+    }
+
+    public List<ProgressManager.Achievement> getUnlockedAchievements() {
+        List<ProgressManager.Achievement> result = new ArrayList<>();
+        while (!achievementStack.empty()) {
+            result.add(achievementStack.pop());
+        }
+        return result;
     }
 
     /**
